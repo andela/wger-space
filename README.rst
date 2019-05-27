@@ -1,3 +1,14 @@
+.. image:: https://circleci.com/gh/andela/wger-space/tree/ch-circle-ci-integrations-with-slack-166185758.svg?style=svg
+    :target: https://circleci.com/gh/andela/wger-space/tree/ch-circle-ci-integrations-with-slack-166185758
+
+
+
+.. image:: https://coveralls.io/repos/github/andela/wger-space/badge.svg?branch=ch-circle-ci-integrations-with-slack-166185758
+    :target: https://coveralls.io/github/andela/wger-space?branch=ch-circle-ci-integrations-with-slack-166185758
+
+
+
+    
 Thank you for downloading wger Workout Manager. wger (ˈvɛɡɐ) is a free, open source web
 application that manages your exercises and personal workouts, weight and diet
 plans. It can also be used as a simple gym management utility, providing different
