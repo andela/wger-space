@@ -103,6 +103,13 @@ BOWER_INSTALLED_APPS = (
     'sortablejs#1.4.x',
 )
 
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+DISABLE_COLLECTSTATIC = 1
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
