@@ -18,23 +18,25 @@ from wger.manager.models import WorkoutLog, WorkoutSession
 
 
 def get_user_last_activity(user):
-    '''
-    Find out when the user was last active. "Active" means in this context logging
-    a weight, or saving a workout session.
+    """
+    Find out when the user was last active. "Active" means in this context
+    logging a weight, or saving a workout session.
 
     :param user: user object
     :return: a date or None if nothing was found
-    '''
+    """
 
     last_activity = None
 
     # Check workout logs
-    last_log = WorkoutLog.objects.filter(user=user).order_by('date').last()
+    last_log = WorkoutLog.objects.filter(user=user).order_by("date").last()
     if last_log:
         last_activity = last_log.date
 
     # Check workout sessions
-    last_session = WorkoutSession.objects.filter(user=user).order_by('date').last()
+    last_session = (
+        WorkoutSession.objects.filter(user=user).order_by("date").last()
+    )
     if last_session:
         last_session = last_session.date
 
@@ -50,17 +52,19 @@ def get_user_last_activity(user):
 
 
 def is_any_gym_admin(user):
-    '''
+    """
     Small utility that checks that the user object has any administrator
     permissions
-    '''
-    return user.has_perm('gym.manage_gym')\
-        or user.has_perm('gym.manage_gyms')\
-        or user.has_perm('gym.gym_trainer')
+    """
+    return (
+        user.has_perm("gym.manage_gym")
+        or user.has_perm("gym.manage_gyms")
+        or user.has_perm("gym.gym_trainer")
+    )
 
 
 def get_permission_list(user):
-    '''
+    """
     Calculate available user permissions
 
     This is needed because a user shouldn't be able to create or give another
@@ -68,15 +72,15 @@ def get_permission_list(user):
 
     :param user: the user creating the account
     :return: a list of permissions
-    '''
+    """
 
-    form_group_permission = ['user', 'trainer']
+    form_group_permission = ["user", "trainer"]
 
-    if user.has_perm('gym.manage_gym'):
-        form_group_permission.append('admin')
+    if user.has_perm("gym.manage_gym"):
+        form_group_permission.append("admin")
 
-    if user.has_perm('gym.manage_gyms'):
-        form_group_permission.append('admin')
-        form_group_permission.append('manager')
+    if user.has_perm("gym.manage_gyms"):
+        form_group_permission.append("admin")
+        form_group_permission.append("manager")
 
     return form_group_permission

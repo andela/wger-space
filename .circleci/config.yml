@@ -17,8 +17,12 @@ jobs:
             . venv/bin/activate
             sudo pip install -r requirements_devel.txt
             sudo pip install pyYAML
-            sudo pip install coveralls
+            sudo pip install coveralls flake8
             invoke create-settings --settings-path ~/wger-space/settings.py 
+      - run:
+          name: Run flake8
+          command: |
+            flake8 wger --show-source --statistics
       - run:
           name: Run tests
           command: |

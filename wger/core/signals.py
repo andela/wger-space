@@ -24,18 +24,18 @@ from wger.utils.helpers import disable_for_loaddata
 
 @disable_for_loaddata
 def create_user_profile(sender, instance, created, **kwargs):
-    '''
+    """
     Every new user gets a profile
-    '''
+    """
     if created:
         UserProfile.objects.create(user=instance)
 
 
 @disable_for_loaddata
 def create_user_cache(sender, instance, created, **kwargs):
-    '''
+    """
     Every new user gets a cache table
-    '''
+    """
     if created:
         UserCache.objects.create(user=instance)
 

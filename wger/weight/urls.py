@@ -23,31 +23,30 @@ from wger.weight import views
 
 
 urlpatterns = [
-    url(r'^add/$',
-        login_required(views.WeightAddView.as_view()),
-        name='add'),
-
-    url(r'^(?P<pk>\d+)/edit/$',
+    url(r"^add/$", login_required(views.WeightAddView.as_view()), name="add"),
+    url(
+        r"^(?P<pk>\d+)/edit/$",
         login_required(views.WeightUpdateView.as_view()),
-        name='edit'),
-
-    url(r'^export-csv/$',
-        views.export_csv,
-        name='export-csv'),
-    url(r'^import-csv/$',
+        name="edit",
+    ),
+    url(r"^export-csv/$", views.export_csv, name="export-csv"),
+    url(
+        r"^import-csv/$",
         login_required(views.WeightCsvImportFormPreview(WeightCsvImportForm)),
-        name='import-csv'),
-
-    url(r'^overview/(?P<username>[\w.@+-]+)$',
-        views.overview,
-        name='overview'),
+        name="import-csv",
+    ),
+    url(
+        r"^overview/(?P<username>[\w.@+-]+)$", views.overview, name="overview"
+    ),
     # url(r'^overview/$',
     #     views.overview,
     #     name='overview'),
-    url(r'^api/get_weight_data/(?P<username>[\w.@+-]+)$', # JS
+    url(
+        r"^api/get_weight_data/(?P<username>[\w.@+-]+)$",  # JS
         views.get_weight_data,
-        name='weight-data'),
-    url(r'^api/get_weight_data/$', # JS
-        views.get_weight_data,
-        name='weight-data'),
+        name="weight-data",
+    ),
+    url(
+        r"^api/get_weight_data/$", views.get_weight_data, name="weight-data"
+    ),  # JS
 ]

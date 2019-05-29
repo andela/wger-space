@@ -24,7 +24,8 @@ from django.forms.widgets import (
     SelectMultiple,
     TextInput,
     ChoiceFieldRenderer,
-    CheckboxChoiceInput)
+    CheckboxChoiceInput,
+)
 
 from django.forms import fields
 
@@ -41,36 +42,41 @@ logger = logging.getLogger(__name__)
 # Date and time related fields
 #
 
+
 class Html5DateInput(DateInput):
-    '''
+    """
     Custom Input class that is rendered with an HTML5 type="date"
 
     This is specially useful in mobile devices
-    '''
-    input_type = 'date'
+    """
+
+    input_type = "date"
 
 
 class Html5FormDateField(fields.DateField):
-    '''
+    """
     HTML5 form date field
-    '''
+    """
+
     widget = Html5DateInput
 
 
 class Html5TimeInput(TextInput):
-    '''
+    """
     Custom Input class that is rendered with an HTML5 type="time"
 
     This is specially useful in mobile devices and not available
     with older versions of django.
-    '''
-    input_type = 'time'
+    """
+
+    input_type = "time"
 
 
 class Html5FormTimeField(fields.TimeField):
-    '''
+    """
     HTML5 form time field
-    '''
+    """
+
     widget = Html5TimeInput
 
 
@@ -78,55 +84,63 @@ class Html5FormTimeField(fields.TimeField):
 # Number related fields
 #
 
+
 class Html5NumberInput(TextInput):
-    '''
+    """
     Custom Input class that is rendered with an HTML5 type="number"
 
     This is specially useful in mobile devices and not available
     with older versions of django.
-    '''
-    input_type = 'number'
+    """
+
+    input_type = "number"
 
 
 #
 # Others
 #
 class ExerciseAjaxSelect(SelectMultiple):
-    '''
+    """
     Custom widget that allows to select exercises from an autocompleter
 
     This is basically a modified MultipleSelect widget
-    '''
+    """
 
     def render(self, name, value, attrs=None, choices=()):
         if value is None:
             value = []
 
-        output = [u'<div>']
-        output.append(u'<input type="text" id="exercise-search" class="form-control">')
-        output.append(u'</div>')
+        output = [u"<div>"]
+        output.append(
+            u'<input type="text" id="exercise-search" class="form-control">'
+        )
+        output.append(u"</div>")
 
         output.append('<div id="exercise-search-log">')
         options = self.render_options(choices, value)
         if options:
             output.append(options)
-        output.append('</div>')
+        output.append("</div>")
 
-        return mark_safe(u'\n'.join(output))
+        return mark_safe(u"\n".join(output))
 
     def render_options(self, choices, selected_choices):
         # Normalize to strings.
         selected_choices = set(force_text(v) for v in selected_choices)
         output = []
         for option_value, option_label in chain(self.choices, choices):
-            output.append(self.render_option(selected_choices, option_value, option_label))
-        return u'\n'.join(output)
+            output.append(
+                self.render_option(
+                    selected_choices, option_value, option_label
+                )
+            )
+        return u"\n".join(output)
 
     def render_option(self, selected_choices, option_value, option_label):
         option_value = force_text(option_value)
         if option_value in selected_choices:
 
-            return u'''
+            return u"""
                     <div id="a%(div_id)s" class="ajax-exercise-select">
                         <a href="#">
                         <img src="/static/images/icons/status-off.svg"
@@ -136,36 +150,42 @@ class ExerciseAjaxSelect(SelectMultiple):
                         </a> %(value)s
                         <input type="hidden" name="exercises" value="%(id)s">
                     </div>
-            ''' % {'value': conditional_escape(force_text(option_label)),
-                   'id': escape(option_value),
-                   'div_id': uuid.uuid4()}
+            """ % {
+                "value": conditional_escape(force_text(option_label)),
+                "id": escape(option_value),
+                "div_id": uuid.uuid4(),
+            }
 
         else:
-            return ''
+            return ""
 
 
 class CheckboxChoiceInputTranslated(CheckboxChoiceInput):
-    '''
+    """
     Overwritten CheckboxChoiceInput
 
     This only translated the text for the select widgets
-    '''
-    input_type = 'checkbox'
+    """
+
+    input_type = "checkbox"
 
     def __init__(self, name, value, attrs, choice, index):
         choice = (choice[0], _(choice[1]))
 
-        super(CheckboxChoiceInputTranslated, self).__init__(name, value, attrs, choice, index)
+        super(CheckboxChoiceInputTranslated, self).__init__(
+            name, value, attrs, choice, index
+        )
 
 
 class CheckboxChoiceInputTranslatedOriginal(CheckboxChoiceInput):
-    '''
+    """
     Overwritten CheckboxChoiceInput
 
     This only translated the text for the select widgets, showing the original
     string as well.
-    '''
-    input_type = 'checkbox'
+    """
+
+    input_type = "checkbox"
 
     def __init__(self, name, value, attrs, choice, index):
         if _(choice[1]) != choice[1]:
@@ -173,11 +193,9 @@ class CheckboxChoiceInputTranslatedOriginal(CheckboxChoiceInput):
         else:
             choice = (choice[0], _(choice[1]))
 
-        super(CheckboxChoiceInputTranslatedOriginal, self).__init__(name,
-                                                                    value,
-                                                                    attrs,
-                                                                    choice,
-                                                                    index)
+        super(CheckboxChoiceInputTranslatedOriginal, self).__init__(
+            name, value, attrs, choice, index
+        )
 
 
 class CheckboxFieldRendererTranslated(ChoiceFieldRenderer):
@@ -189,12 +207,14 @@ class CheckboxFieldRendererTranslatedOriginal(ChoiceFieldRenderer):
 
 
 class CheckboxBootstrapRenderer(CheckboxFieldRendererTranslated):
-    outer_html = u'<div{id_attr}>{content}</div>'
+    outer_html = u"<div{id_attr}>{content}</div>"
     inner_html = u'<div class="checkbox">{choice_value}{sub_widgets}</div>'
 
 
-class CheckboxBootstrapRendererTranslatedOriginal(CheckboxFieldRendererTranslatedOriginal):
-    outer_html = u'<div{id_attr}>{content}</div>'
+class CheckboxBootstrapRendererTranslatedOriginal(
+    CheckboxFieldRendererTranslatedOriginal
+):
+    outer_html = u"<div{id_attr}>{content}</div>"
     inner_html = u'<div class="checkbox">{choice_value}{sub_widgets}</div>'
 
 
@@ -207,27 +227,31 @@ class BootstrapSelectMultipleTranslatedOriginal(CheckboxSelectMultiple):
 
 
 class TranslatedSelectMultiple(BootstrapSelectMultiple):
-    '''
+    """
     A SelectMultiple widget that translates the options
-    '''
+    """
+
     pass
 
 
-class TranslatedOriginalSelectMultiple(BootstrapSelectMultipleTranslatedOriginal):
-    '''
+class TranslatedOriginalSelectMultiple(
+    BootstrapSelectMultipleTranslatedOriginal
+):
+    """
     A SelectMultiple widget that translates the options, showing the original
     string as well. This is currently only used in the muscle list, where the
     translated muscles as well as the latin names are shown.
-    '''
+    """
+
     pass
 
 
 class TranslatedSelect(Select):
-    '''
+    """
     A Select widget that translates the options
-    '''
+    """
 
     def render_option(self, selected_choices, option_value, option_label):
-        return super(TranslatedSelect, self).render_option(selected_choices,
-                                                           option_value,
-                                                           _(option_label))
+        return super(TranslatedSelect, self).render_option(
+            selected_choices, option_value, _(option_label)
+        )

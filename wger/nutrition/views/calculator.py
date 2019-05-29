@@ -25,43 +25,49 @@ from django.shortcuts import render
 from wger.nutrition.forms import (
     BmrForm,
     PhysicalActivitiesForm,
-    DailyCaloriesForm
+    DailyCaloriesForm,
 )
 
 
 logger = logging.getLogger(__name__)
 
-'''
+"""
 Protein calculator views
-'''
+"""
 
 
 @login_required
 def view(request):
-    '''
+    """
     The basal metabolic rate detail page
-    '''
+    """
 
-    form_data = {'age': request.user.userprofile.age,
-                 'height': request.user.userprofile.height,
-                 'gender': request.user.userprofile.gender,
-                 'weight': request.user.userprofile.weight}
+    form_data = {
+        "age": request.user.userprofile.age,
+        "height": request.user.userprofile.height,
+        "gender": request.user.userprofile.gender,
+        "weight": request.user.userprofile.weight,
+    }
 
     context = {}
-    context['form'] = BmrForm(initial=form_data)
-    context['form_activities'] = PhysicalActivitiesForm(instance=request.user.userprofile)
-    context['form_calories'] = DailyCaloriesForm(instance=request.user.userprofile)
+    context["form"] = BmrForm(initial=form_data)
+    context["form_activities"] = PhysicalActivitiesForm(
+        instance=request.user.userprofile
+    )
+    context["form_calories"] = DailyCaloriesForm(
+        instance=request.user.userprofile
+    )
 
-    return render(request, 'rate/form.html', context)
+    return render(request, "rate/form.html", context)
 
 
 @login_required
 def calculate_bmr(request):
-    '''
+    """
     Calculates the basal metabolic rate.
 
     Currently only the Mifflin-St.Jeor-Formel is supported
-    '''
+    """
 
     data = []
 
@@ -70,39 +76,45 @@ def calculate_bmr(request):
         form.save()
 
         # Create a new weight entry as needed
-        request.user.userprofile.user_bodyweight(form.cleaned_data['weight'])
+        request.user.userprofile.user_bodyweight(form.cleaned_data["weight"])
 
         bmr = request.user.userprofile.calculate_basal_metabolic_rate()
-        result = {'bmr': '{0:.0f}'.format(bmr)}
+        result = {"bmr": "{0:.0f}".format(bmr)}
         data = json.dumps(result)
     else:
         logger.debug(form.errors)
 
     # Return the results to the client
-    return HttpResponse(data, 'application/json')
+    return HttpResponse(data, "application/json")
 
 
 @login_required
 def calculate_activities(request):
-    '''
+    """
     Calculates the calories needed by additional physical activities
-    '''
+    """
 
     data = []
 
-    form = PhysicalActivitiesForm(data=request.POST, instance=request.user.userprofile)
+    form = PhysicalActivitiesForm(
+        data=request.POST, instance=request.user.userprofile
+    )
     if form.is_valid():
         form.save()
 
         # Calculate the activities factor and the total calories
         factor = request.user.userprofile.calculate_activities()
-        total = request.user.userprofile.calculate_basal_metabolic_rate() * factor
-        result = {'activities': '{0:.0f}'.format(total),
-                  'factor': '{0:.2f}'.format(factor)}
+        total = (
+            request.user.userprofile.calculate_basal_metabolic_rate() * factor
+        )
+        result = {
+            "activities": "{0:.0f}".format(total),
+            "factor": "{0:.2f}".format(factor),
+        }
         data = json.dumps(result)
 
     else:
         logger.debug(form.errors)
 
     # Return the results to the client
-    return HttpResponse(data, 'application/json')
+    return HttpResponse(data, "application/json")

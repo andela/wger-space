@@ -19,24 +19,26 @@ from wger.core.tests.base_testcase import WorkoutManagerTestCase
 
 
 class EmailInactiveUserTestCase(WorkoutManagerTestCase):
-    '''
+    """
     Test email reminders for inactive users
-    '''
+    """
 
     def test_reminder(self, fail=False):
-        '''
+        """
         Test email reminders for inactive users
-        '''
+        """
 
-        call_command('inactive-members')
+        call_command("inactive-members")
         self.assertEqual(len(mail.outbox), 6)
 
         recipment_list = [message.to[0] for message in mail.outbox]
-        trainer_list = ['trainer4@example.com',
-                        'trainer5@example.com',
-                        'trainer1@example.com',
-                        'trainer2@example.com',
-                        'trainer3@example.com']
+        trainer_list = [
+            "trainer4@example.com",
+            "trainer5@example.com",
+            "trainer1@example.com",
+            "trainer2@example.com",
+            "trainer3@example.com",
+        ]
         recipment_list.sort()
         trainer_list.sort()
 

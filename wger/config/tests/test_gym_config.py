@@ -25,14 +25,14 @@ from wger.gym.models import Gym, GymUserConfig
 
 
 class GymConfigTestCase(WorkoutManagerTestCase):
-    '''
+    """
     Test the system wide gym configuration
-    '''
+    """
 
     def test_default_gym(self):
-        '''
+        """
         Test that newly registered users get a gym
-        '''
+        """
 
         gym = Gym.objects.get(pk=2)
         gym_config = GymConfig.objects.get(pk=1)
@@ -40,42 +40,50 @@ class GymConfigTestCase(WorkoutManagerTestCase):
         gym_config.save()
 
         # Register
-        registration_data = {'username': 'myusername',
-                             'password1': 'secret',
-                             'password2': 'secret',
-                             'email': 'my.email@example.com',
-                             'g-recaptcha-response': 'PASSED', }
-        self.client.post(reverse('core:user:registration'), registration_data)
+        registration_data = {
+            "username": "myusername",
+            "password1": "secret",
+            "password2": "secret",
+            "email": "my.email@example.com",
+            "g-recaptcha-response": "PASSED",
+        }
+        self.client.post(reverse("core:user:registration"), registration_data)
         new_user = User.objects.all().last()
 
         self.assertEqual(new_user.userprofile.gym, gym)
         self.assertEqual(new_user.gymuserconfig.gym, gym)
 
     def test_no_default_gym(self):
-        '''
+        """
         Test the user registration without a default gym
-        '''
+        """
 
         gym_config = GymConfig.objects.get(pk=1)
         gym_config.default_gym = None
         gym_config.save()
 
         # Register
-        registration_data = {'username': 'myusername',
-                             'password1': 'secret',
-                             'password2': 'secret',
-                             'email': 'my.email@example.com',
-                             'g-recaptcha-response': 'PASSED', }
-        self.client.post(reverse('core:user:registration'), registration_data)
+        registration_data = {
+            "username": "myusername",
+            "password1": "secret",
+            "password2": "secret",
+            "email": "my.email@example.com",
+            "g-recaptcha-response": "PASSED",
+        }
+        self.client.post(reverse("core:user:registration"), registration_data)
 
         new_user = User.objects.all().last()
         self.assertEqual(new_user.userprofile.gym_id, None)
-        self.assertRaises(GymUserConfig.DoesNotExist, GymUserConfig.objects.get, user=new_user)
+        self.assertRaises(
+            GymUserConfig.DoesNotExist,
+            GymUserConfig.objects.get,
+            user=new_user,
+        )
 
     def test_update_userprofile(self):
-        '''
+        """
         Test setting the gym for users when setting a default gym
-        '''
+        """
 
         UserProfile.objects.update(gym=None)
         GymUserConfig.objects.all().delete()

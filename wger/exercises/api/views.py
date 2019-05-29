@@ -32,7 +32,7 @@ from wger.exercises.api.serializers import (
     ExerciseImageSerializer,
     ExerciseCategorySerializer,
     EquipmentSerializer,
-    ExerciseCommentSerializer
+    ExerciseCommentSerializer,
 )
 from wger.exercises.models import (
     Exercise,
@@ -40,36 +40,39 @@ from wger.exercises.models import (
     ExerciseCategory,
     ExerciseImage,
     ExerciseComment,
-    Muscle
+    Muscle,
 )
 from wger.utils.language import load_item_languages, load_language
 from wger.utils.permissions import CreateOnlyPermission
 
 
 class ExerciseViewSet(viewsets.ModelViewSet):
-    '''
+    """
     API endpoint for exercise objects
-    '''
+    """
+
     queryset = Exercise.objects.all()
     serializer_class = ExerciseSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, CreateOnlyPermission)
-    ordering_fields = '__all__'
-    filter_fields = ('category',
-                     'creation_date',
-                     'description',
-                     'language',
-                     'muscles',
-                     'muscles_secondary',
-                     'status',
-                     'name',
-                     'equipment',
-                     'license',
-                     'license_author')
+    ordering_fields = "__all__"
+    filter_fields = (
+        "category",
+        "creation_date",
+        "description",
+        "language",
+        "muscles",
+        "muscles_secondary",
+        "status",
+        "name",
+        "equipment",
+        "license",
+        "license_author",
+    )
 
     def perform_create(self, serializer):
-        '''
+        """
         Set author and status
-        '''
+        """
         language = load_language()
         obj = serializer.save(language=language)
         # Todo is it right to call set author after save?
@@ -77,91 +80,100 @@ class ExerciseViewSet(viewsets.ModelViewSet):
         obj.save()
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def search(request):
-    '''
+    """
     Searches for exercises.
 
     This format is currently used by the exercise search autocompleter
-    '''
-    q = request.GET.get('term', None)
+    """
+    q = request.GET.get("term", None)
     results = []
     json_response = {}
 
     if q:
-        languages = load_item_languages(LanguageConfig.SHOW_ITEM_EXERCISES,
-                                        language_code=request.GET.get('language', None))
-        exercises = (Exercise.objects.filter(name__icontains=q)
-                     .filter(language__in=languages)
-                     .filter(status=Exercise.STATUS_ACCEPTED)
-                     .order_by('category__name', 'name')
-                     .distinct())
+        languages = load_item_languages(
+            LanguageConfig.SHOW_ITEM_EXERCISES,
+            language_code=request.GET.get("language", None),
+        )
+        exercises = (
+            Exercise.objects.filter(name__icontains=q)
+            .filter(language__in=languages)
+            .filter(status=Exercise.STATUS_ACCEPTED)
+            .order_by("category__name", "name")
+            .distinct()
+        )
 
         for exercise in exercises:
             if exercise.main_image:
                 image_obj = exercise.main_image
                 image = image_obj.image.url
                 t = get_thumbnailer(image_obj.image)
-                thumbnail = t.get_thumbnail(aliases.get('micro_cropped')).url
+                thumbnail = t.get_thumbnail(aliases.get("micro_cropped")).url
             else:
                 image = None
                 thumbnail = None
 
             exercise_json = {
-                'value': exercise.name,
-                'data': {
-                    'id': exercise.id,
-                    'name': exercise.name,
-                    'category': _(exercise.category.name),
-                    'image': image,
-                    'image_thumbnail': thumbnail
-                }
+                "value": exercise.name,
+                "data": {
+                    "id": exercise.id,
+                    "name": exercise.name,
+                    "category": _(exercise.category.name),
+                    "image": image,
+                    "image_thumbnail": thumbnail,
+                },
             }
             results.append(exercise_json)
-        json_response['suggestions'] = results
+        json_response["suggestions"] = results
 
     return Response(json_response)
 
 
 class EquipmentViewSet(viewsets.ReadOnlyModelViewSet):
-    '''
+    """
     API endpoint for equipment objects
-    '''
+    """
+
     queryset = Equipment.objects.all()
     serializer_class = EquipmentSerializer
-    ordering_fields = '__all__'
-    filter_fields = ('name',)
+    ordering_fields = "__all__"
+    filter_fields = ("name",)
 
 
 class ExerciseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
-    '''
+    """
     API endpoint for exercise categories objects
-    '''
+    """
+
     queryset = ExerciseCategory.objects.all()
     serializer_class = ExerciseCategorySerializer
-    ordering_fields = '__all__'
-    filter_fields = ('name',)
+    ordering_fields = "__all__"
+    filter_fields = ("name",)
 
 
 class ExerciseImageViewSet(viewsets.ModelViewSet):
-    '''
+    """
     API endpoint for exercise image objects
-    '''
+    """
+
     queryset = ExerciseImage.objects.all()
     serializer_class = ExerciseImageSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, CreateOnlyPermission)
-    ordering_fields = '__all__'
-    filter_fields = ('is_main',
-                     'status',
-                     'exercise',
-                     'license',
-                     'license_author')
+    ordering_fields = "__all__"
+    filter_fields = (
+        "is_main",
+        "status",
+        "exercise",
+        "license",
+        "license_author",
+    )
 
     @detail_route()
     def thumbnails(self, request, pk):
-        '''
+        """
         Return a list of the image's thumbnails
-        '''
+        """
         try:
             image = ExerciseImage.objects.get(pk=pk)
         except ExerciseImage.DoesNotExist:
@@ -171,16 +183,16 @@ class ExerciseImageViewSet(viewsets.ModelViewSet):
         for alias in aliases.all():
             t = get_thumbnailer(image.image)
             thumbnails[alias] = {
-                'url': t.get_thumbnail(aliases.get(alias)).url,
-                'settings': aliases.get(alias)
+                "url": t.get_thumbnail(aliases.get(alias)).url,
+                "settings": aliases.get(alias),
             }
-        thumbnails['original'] = image.image.url
+        thumbnails["original"] = image.image.url
         return Response(thumbnails)
 
     def perform_create(self, serializer):
-        '''
+        """
         Set the license data
-        '''
+        """
         obj = serializer.save()
         # Todo is it right to call set author after save?
         obj.set_author(self.request)
@@ -188,22 +200,22 @@ class ExerciseImageViewSet(viewsets.ModelViewSet):
 
 
 class ExerciseCommentViewSet(viewsets.ReadOnlyModelViewSet):
-    '''
+    """
     API endpoint for exercise comment objects
-    '''
+    """
+
     queryset = ExerciseComment.objects.all()
     serializer_class = ExerciseCommentSerializer
-    ordering_fields = '__all__'
-    filter_fields = ('comment',
-                     'exercise')
+    ordering_fields = "__all__"
+    filter_fields = ("comment", "exercise")
 
 
 class MuscleViewSet(viewsets.ReadOnlyModelViewSet):
-    '''
+    """
     API endpoint for muscle objects
-    '''
+    """
+
     queryset = Muscle.objects.all()
     serializer_class = MuscleSerializer
-    ordering_fields = '__all__'
-    filter_fields = ('name',
-                     'is_front')
+    ordering_fields = "__all__"
+    filter_fields = ("name", "is_front")

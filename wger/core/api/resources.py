@@ -19,61 +19,57 @@ from tastypie.constants import ALL
 from tastypie.resources import ModelResource
 
 from wger.utils.resources import UserObjectsOnlyAuthorization
-from wger.core.models import (
-    UserProfile,
-    Language,
-    DaysOfWeek,
-    License
-)
+from wger.core.models import UserProfile, Language, DaysOfWeek, License
 
 
 class UserProfileResource(ModelResource):
-    '''
+    """
     Resource for user profiles
-    '''
+    """
 
     def authorized_read_list(self, object_list, bundle):
-        '''
+        """
         Filter to own objects
-        '''
+        """
         return object_list.filter(user=bundle.request.user)
 
     class Meta:
-        excludes = ('is_temporary', )
+        excludes = ("is_temporary",)
         queryset = UserProfile.objects.all()
         authentication = ApiKeyAuthentication()
         authorization = UserObjectsOnlyAuthorization()
 
 
 class LanguageResource(ModelResource):
-    '''
+    """
     Resource for languages
-    '''
+    """
+
     class Meta:
         queryset = Language.objects.all()
-        filtering = {'id': ALL,
-                     "full_name": ALL,
-                     "short_name": ALL}
+        filtering = {"id": ALL, "full_name": ALL, "short_name": ALL}
 
 
 class DaysOfWeekResource(ModelResource):
-    '''
+    """
     Resource for days of the week
-    '''
+    """
 
     class Meta:
         queryset = DaysOfWeek.objects.all()
-        filtering = {'id': ALL,
-                     'day_of_week': ALL}
+        filtering = {"id": ALL, "day_of_week": ALL}
 
 
 class LicenseResource(ModelResource):
-    '''
+    """
     Resource for licenses
-    '''
+    """
+
     class Meta:
         queryset = License.objects.all()
-        filtering = {'id': ALL,
-                     "full_name": ALL,
-                     "short_name": ALL,
-                     "url": ALL}
+        filtering = {
+            "id": ALL,
+            "full_name": ALL,
+            "short_name": ALL,
+            "url": ALL,
+        }

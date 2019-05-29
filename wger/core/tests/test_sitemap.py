@@ -18,12 +18,12 @@ from wger.core.tests.base_testcase import WorkoutManagerTestCase
 
 
 class SitemapTestCase(WorkoutManagerTestCase):
-    '''
+    """
     Tests the generated sitemap
-    '''
+    """
 
     def test_sitemap(self):
 
-        response = self.client.get(reverse('sitemap'))
+        response = self.client.get(reverse("sitemap"))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context['urlset']), 18)
+        self.assertEqual(len(response.context["urlset"]), 18)

@@ -23,20 +23,18 @@ from wger.utils.resources import UserObjectsOnlyAuthorization
 
 
 class WeightEntryResource(ModelResource):
-    '''
+    """
     Resource for weight entries
-    '''
+    """
 
     def authorized_read_list(self, object_list, bundle):
-        '''
+        """
         Filter to own objects
-        '''
+        """
         return object_list.filter(user=bundle.request.user)
 
     class Meta:
         queryset = WeightEntry.objects.all()
         authentication = ApiKeyAuthentication()
         authorization = UserObjectsOnlyAuthorization()
-        filtering = {'id': ALL,
-                     'date': ALL,
-                     'weight': ALL}
+        filtering = {"id": ALL, "date": ALL, "weight": ALL}

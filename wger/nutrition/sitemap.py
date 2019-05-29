@@ -25,5 +25,6 @@ class NutritionSitemap(Sitemap):
     priority = 0.5
 
     def items(self):
-        return (Ingredient.objects.filter(language=load_language())
-                                  .filter(status__in=Ingredient.INGREDIENT_STATUS_OK))
+        return Ingredient.objects.filter(language=load_language()).filter(
+            status__in=Ingredient.INGREDIENT_STATUS_OK
+        )

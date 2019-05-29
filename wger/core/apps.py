@@ -18,7 +18,7 @@ from django.apps import AppConfig
 
 
 class CoreConfig(AppConfig):
-    name = 'wger.core'
+    name = "wger.core"
     verbose_name = "Core"
 
     def ready(self):

@@ -26,98 +26,102 @@ from wger.core.models import (
     DaysOfWeek,
     License,
     RepetitionUnit,
-    WeightUnit)
+    WeightUnit,
+)
 from wger.core.api.serializers import (
     UsernameSerializer,
     LanguageSerializer,
     DaysOfWeekSerializer,
     LicenseSerializer,
     RepetitionUnitSerializer,
-    WeightUnitSerializer
+    WeightUnitSerializer,
 )
 from wger.core.api.serializers import UserprofileSerializer
 from wger.utils.permissions import UpdateOnlyPermission, WgerPermission
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
-    '''
+    """
     API endpoint for workout objects
-    '''
+    """
+
     is_private = True
     serializer_class = UserprofileSerializer
     permission_classes = (WgerPermission, UpdateOnlyPermission)
-    ordering_fields = '__all__'
+    ordering_fields = "__all__"
 
     def get_queryset(self):
-        '''
+        """
         Only allow access to appropriate objects
-        '''
+        """
         return UserProfile.objects.filter(user=self.request.user)
 
     def get_owner_objects(self):
-        '''
+        """
         Return objects to check for ownership permission
-        '''
-        return [(User, 'user')]
+        """
+        return [(User, "user")]
 
     @detail_route()
     def username(self, request, pk):
-        '''
+        """
         Return the username
-        '''
+        """
 
         user = self.get_object().user
         return Response(UsernameSerializer(user).data)
 
 
 class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
-    '''
+    """
     API endpoint for workout objects
-    '''
+    """
+
     queryset = Language.objects.all()
     serializer_class = LanguageSerializer
-    ordering_fields = '__all__'
-    filter_fields = ('full_name',
-                     'short_name')
+    ordering_fields = "__all__"
+    filter_fields = ("full_name", "short_name")
 
 
 class DaysOfWeekViewSet(viewsets.ReadOnlyModelViewSet):
-    '''
+    """
     API endpoint for workout objects
-    '''
+    """
+
     queryset = DaysOfWeek.objects.all()
     serializer_class = DaysOfWeekSerializer
-    ordering_fields = '__all__'
-    filter_fields = ('day_of_week', )
+    ordering_fields = "__all__"
+    filter_fields = ("day_of_week",)
 
 
 class LicenseViewSet(viewsets.ReadOnlyModelViewSet):
-    '''
+    """
     API endpoint for workout objects
-    '''
+    """
+
     queryset = License.objects.all()
     serializer_class = LicenseSerializer
-    ordering_fields = '__all__'
-    filter_fields = ('full_name',
-                     'short_name',
-                     'url')
+    ordering_fields = "__all__"
+    filter_fields = ("full_name", "short_name", "url")
 
 
 class RepetitionUnitViewSet(viewsets.ReadOnlyModelViewSet):
-    '''
+    """
     API endpoint for repetition units objects
-    '''
+    """
+
     queryset = RepetitionUnit.objects.all()
     serializer_class = RepetitionUnitSerializer
-    ordering_fields = '__all__'
-    filter_fields = ('name', )
+    ordering_fields = "__all__"
+    filter_fields = ("name",)
 
 
 class WeightUnitViewSet(viewsets.ReadOnlyModelViewSet):
-    '''
+    """
     API endpoint for weight units objects
-    '''
+    """
+
     queryset = WeightUnit.objects.all()
     serializer_class = WeightUnitSerializer
-    ordering_fields = '__all__'
-    filter_fields = ('name', )
+    ordering_fields = "__all__"
+    filter_fields = ("name",)

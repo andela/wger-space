@@ -18,7 +18,7 @@ from django.apps import AppConfig
 
 
 class GymConfig(AppConfig):
-    name = 'wger.gym'
+    name = "wger.gym"
     verbose_name = "Gym"
 
     def ready(self):
