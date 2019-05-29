@@ -1,0 +1,50 @@
+{
+    "name": "wger-space",
+    "scripts": {},
+    "env": {
+      "BUILDPACK_URL": {
+        "required": true
+      },
+      "DB_ENGINE": {
+        "required": true
+      },
+      "DB_HOST": {
+        "required": true
+      },
+      "DB_NAME": {
+        "required": true
+      },
+      "DB_PASSWORD": {
+        "required": true
+      },
+      "DB_PORT": {
+        "required": true
+      },
+      "DB_USER": {
+        "required": true
+      },
+      "DISABLE_COLLECTSTATIC": {
+        "required": true
+      },
+      "SECRET_KEY":{
+        "required": true
+      }
+    },
+    "formation": {
+      "web": {
+        "quantity": 1
+      }
+    },
+    "addons": [
+      "heroku-postgresql"
+    ],
+    "buildpacks": [
+      {
+        "url": "heroku/nodejs"
+      },
+      {
+        "url": "heroku/python"
+      }
+    ],
+    "stack": "heroku-18"
+  }

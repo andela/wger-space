@@ -17,7 +17,7 @@ django-bootstrap-breadcrumbs
 sphinx
 django-sortedm2m
 django-bower
-invoke
+invoke==1.2.0
 requests
 # REST API
 djangorestframework>=3.2,<3.3
@@ -27,3 +27,7 @@ django-cors-headers==2.4.1
 
 # Python3 compatibility
 six
+psycopg2
+psycopg2_binary
+whitenoise==4.1.2
+gunicorn==19.9.0
