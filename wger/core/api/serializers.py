@@ -24,7 +24,12 @@ from wger.core.models import (
     License,
     RepetitionUnit,
     WeightUnit,
-)
+    User,
+    ApiUserModel)
+from rest_framework.authtoken.models import Token
+import re
+from rest_framework import status
+from rest_framework.response import Response
 
 
 class UserprofileSerializer(serializers.ModelSerializer):
@@ -87,3 +92,19 @@ class WeightUnitSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WeightUnit
+
+
+class ApiCreateUserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        max_length=11,
+        min_length=8,
+        write_only=True)
+    token = serializers.CharField(
+        write_only=True
+    )
+
+    class Meta:
+        model = User
+        fields = [
+            'username', 'password',
+            'email', 'token']

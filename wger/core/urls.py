@@ -26,8 +26,7 @@ from wger.core.views import (
     license,
     languages,
     repetition_units,
-    weight_units,
-)
+    weight_units)
 
 # sub patterns for languages
 patterns_language = [

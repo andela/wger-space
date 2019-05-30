@@ -72,3 +72,4 @@ node_modules
 # virtualenv
 Pipfile
 package-lock.json
+.DS_Store
