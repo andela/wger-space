@@ -144,6 +144,7 @@ urlpatterns = i18n_patterns(
     url(r'config/', include('wger.config.urls', namespace='config', app_name='config')),
     url(r'gym/', include('wger.gym.urls', namespace='gym', app_name='gym')),
     url(r'email/', include('wger.email.urls', namespace='email')),
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
     url(r'^sitemap\.xml$',
         sitemap,
         {'sitemaps': sitemaps},

@@ -134,8 +134,9 @@ MIDDLEWARE_CLASSES = (
 )
 
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.twitter.TwitterOAuth',
     'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
     'wger.utils.helpers.EmailAuthBackend'
 )
@@ -157,15 +158,16 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
 
+                #social login
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
+
                 # Django mobile
                 'django_mobile.context_processors.flavour',
 
                 # Breadcrumbs
                 'django.template.context_processors.request'
 
-                #social login
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
             ],
             'loaders': [
                 # Django mobile
@@ -206,7 +208,12 @@ EMAIL_SUBJECT_PREFIX = '[wger] '
 LOGIN_URL = '/user/login'
 LOGIN_REDIRECT_URL = '/'
 
+#social auth keys
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '249957314196-9qustvr303apilj2r7t7o2gi7527ih98.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'JeWFqyjbZRTSl1YeqQCWD0Ue'
 
+SOCIAL_AUTH_FACEBOOK_KEY = '651767078568790'
+SOCIAL_AUTH_FACEBOOK_SECRET = '4c50c60edede8f584913aa8d38d43ac5'
 #
 # Internationalization
 #
