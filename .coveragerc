@@ -1,2 +1,8 @@
 [run]
 omit = *migrations*
+       */tests/*
+       */settings.py
+       */urls.py
+       */__init__.py
+       */manage.py
+       */settings_global.py
