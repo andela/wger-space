@@ -14,6 +14,23 @@
     {% trans 'Login' as submit_text %}
     {% render_form_fields form submit_text %}
 </form>
+
+<h4>-- OR --</h4>
+<p>
+  <a href="{% url 'social:begin' 'facebook' %}" class="btn btn-block btn-primary" style="background-color:#3B5998">
+    Facebook
+  </a>
+</p>
+<p>
+    <a href="{% url 'social:begin' 'twitter' %}" class="btn btn-block btn-primary">
+      Twitter
+    </a>
+  </p>
+<p>
+  <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-block btn-danger">
+    Google+
+  </a>
+</p>
 {% endblock %}
 
 
@@ -33,4 +50,5 @@
         {% trans "Reset password" %}
     </a>
 </p>
+
 {% endblock %}

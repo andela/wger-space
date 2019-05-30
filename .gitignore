@@ -18,6 +18,9 @@ lib64/
 parts/
 sdist/
 var/
+venv-django/
+venv-django/bin
+.vscode/
 *.egg-info/
 .installed.cfg
 *.egg
