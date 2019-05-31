@@ -1,6 +1,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+.pytest_cache
 
 # C extensions
 *.so
@@ -58,7 +59,12 @@ target/
 
 # IDE
 .idea/
+.vscode/
 
 # External Libraries 
 wger/core/static/bower_components
 node_modules
+
+# virtualenv
+Pipfile
+package-lock.json

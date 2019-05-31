@@ -20,31 +20,33 @@ from django.views.generic import TemplateView, RedirectView
 from wger.software import views
 
 urlpatterns = [
-
-    url(r'^issues$',
+    url(
+        r"^issues$",
         TemplateView.as_view(template_name="issues.html"),
-        name='issues'),
-    url(r'^terms-of-service$',
+        name="issues",
+    ),
+    url(
+        r"^terms-of-service$",
         TemplateView.as_view(template_name="tos.html"),
-        name='tos'),
-
-    url(r'^features$',
-        views.features,
-        name='features'),
-
-    url(r'^license$',
+        name="tos",
+    ),
+    url(r"^features$", views.features, name="features"),
+    url(
+        r"^license$",
         TemplateView.as_view(template_name="license.html"),
-        name='license'),
-
-    url(r'^code$',
-        RedirectView.as_view(permanent=True, url='https://github.com/wger-project/wger'),
-        name='code'),
-
-    url(r'^contribute$',
+        name="license",
+    ),
+    url(
+        r"^code$",
+        RedirectView.as_view(
+            permanent=True, url="https://github.com/wger-project/wger"
+        ),
+        name="code",
+    ),
+    url(
+        r"^contribute$",
         TemplateView.as_view(template_name="contribute.html"),
-        name='contribute'),
-
-    url(r'^api$',
-        TemplateView.as_view(template_name="api.html"),
-        name='api'),
+        name="contribute",
+    ),
+    url(r"^api$", TemplateView.as_view(template_name="api.html"), name="api"),
 ]

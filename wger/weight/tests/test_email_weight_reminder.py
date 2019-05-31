@@ -25,7 +25,7 @@ from wger.weight.models import WeightEntry
 class EmailWeightReminderTestCase(WorkoutManagerTestCase):
     def test_without_email(self):
         user = User.objects.get(pk=2)
-        user.email = ''
+        user.email = ""
         user.num_days_weight_reminder = 3
         user.save()
 
@@ -34,7 +34,7 @@ class EmailWeightReminderTestCase(WorkoutManagerTestCase):
 
     def test_without_num_days_weight_reminder(self):
         user = User.objects.get(pk=2)
-        user.email = 'test@test.com'
+        user.email = "test@test.com"
         user.save()
 
         user.userprofile.num_days_weight_reminder = 0
@@ -45,7 +45,7 @@ class EmailWeightReminderTestCase(WorkoutManagerTestCase):
 
     def test_with_num_days_weight_reminder(self):
         user = User.objects.get(pk=2)
-        user.email = 'test@test.com'
+        user.email = "test@test.com"
         user.save()
 
         user.userprofile.num_days_weight_reminder = 3
@@ -56,7 +56,7 @@ class EmailWeightReminderTestCase(WorkoutManagerTestCase):
 
     def test_send_email(self):
         user = User.objects.get(pk=2)
-        user.email = 'test@test.com'
+        user.email = "test@test.com"
         user.save()
 
         weightEntry = WeightEntry.objects.filter(user=user).get(pk=3)
@@ -71,7 +71,7 @@ class EmailWeightReminderTestCase(WorkoutManagerTestCase):
 
     def test_send_email_zero_days_diff(self):
         user = User.objects.get(pk=2)
-        user.email = 'test@test.com'
+        user.email = "test@test.com"
         user.save()
 
         weightEntry = WeightEntry.objects.filter(user=user).get(pk=3)
@@ -86,7 +86,7 @@ class EmailWeightReminderTestCase(WorkoutManagerTestCase):
 
     def test_not_send_email(self):
         user = User.objects.get(pk=2)
-        user.email = 'test@test.com.br'
+        user.email = "test@test.com.br"
         user.save()
 
         weightEntry = WeightEntry.objects.filter(user=user).latest()

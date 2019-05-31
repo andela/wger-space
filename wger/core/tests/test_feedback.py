@@ -19,61 +19,69 @@ from wger.core.tests.base_testcase import WorkoutManagerTestCase
 
 
 class FeedbackTestCase(WorkoutManagerTestCase):
-    '''
+    """
     Tests the feedback form
-    '''
+    """
 
     def send_feedback(self, logged_in=True):
-        '''
+        """
         Helper function
-        '''
-        response = self.client.get(reverse('core:feedback'))
+        """
+        response = self.client.get(reverse("core:feedback"))
         self.assertEqual(response.status_code, 200)
-        response = self.client.post(reverse('core:feedback'),
-                                    {'comment': 'A very long and interesting comment'})
+        response = self.client.post(
+            reverse("core:feedback"),
+            {"comment": "A very long and interesting comment"},
+        )
         if logged_in:
             self.assertEqual(response.status_code, 302)
             self.assertEqual(len(mail.outbox), 1)
-            response = self.client.get(response['Location'])
+            response = self.client.get(response["Location"])
             self.assertEqual(response.status_code, 200)
 
             # Short comment
-            response = self.client.post(reverse('core:feedback'), {'comment': '12345'})
+            response = self.client.post(
+                reverse("core:feedback"), {"comment": "12345"}
+            )
             self.assertEqual(response.status_code, 200)
-            self.assertEqual(len(response.context['form'].errors), 1)
+            self.assertEqual(len(response.context["form"].errors), 1)
         else:
             # No recaptcha field
             self.assertEqual(response.status_code, 200)
             self.assertEqual(len(mail.outbox), 0)
 
             # Correctly filled in reCaptcha
-            response = self.client.post(reverse('core:feedback'),
-                                        {'comment': 'A very long and interesting comment',
-                                         'g-recaptcha-response': 'PASSED'})
+            response = self.client.post(
+                reverse("core:feedback"),
+                {
+                    "comment": "A very long and interesting comment",
+                    "g-recaptcha-response": "PASSED",
+                },
+            )
             self.assertEqual(response.status_code, 302)
             self.assertEqual(len(mail.outbox), 1)
-            response = self.client.get(response['Location'])
+            response = self.client.get(response["Location"])
             self.assertEqual(response.status_code, 200)
 
     def test_send_feedback_admin(self):
-        '''
+        """
         Tests the feedback form as an admin user
-        '''
+        """
 
-        self.user_login('admin')
+        self.user_login("admin")
         self.send_feedback()
 
     def test_send_feedback_user(self):
-        '''
+        """
         Tests the feedback form as a regular user
-        '''
+        """
 
-        self.user_login('test')
+        self.user_login("test")
         self.send_feedback()
 
     def test_send_feedback_logged_out(self):
-        '''
+        """
         Tests the feedback form as a logged out user
-        '''
+        """
 
         self.send_feedback(logged_in=False)

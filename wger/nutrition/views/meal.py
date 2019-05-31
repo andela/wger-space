@@ -33,18 +33,21 @@ logger = logging.getLogger(__name__)
 # Meal functions
 # ************************
 
+
 class MealCreateView(WgerFormMixin, CreateView):
-    '''
+    """
     Generic view to add a new meal to a nutrition plan
-    '''
+    """
 
     model = Meal
-    fields = '__all__'
-    title = ugettext_lazy('Add new meal')
-    owner_object = {'pk': 'plan_pk', 'class': NutritionPlan}
+    fields = "__all__"
+    title = ugettext_lazy("Add new meal")
+    owner_object = {"pk": "plan_pk", "class": NutritionPlan}
 
     def form_valid(self, form):
-        plan = get_object_or_404(NutritionPlan, pk=self.kwargs['plan_pk'], user=self.request.user)
+        plan = get_object_or_404(
+            NutritionPlan, pk=self.kwargs["plan_pk"], user=self.request.user
+        )
         form.instance.plan = plan
         form.instance.order = 1
         return super(MealCreateView, self).form_valid(form)
@@ -55,21 +58,22 @@ class MealCreateView(WgerFormMixin, CreateView):
     # Send some additional data to the template
     def get_context_data(self, **kwargs):
         context = super(MealCreateView, self).get_context_data(**kwargs)
-        context['form_action'] = reverse('nutrition:meal:add',
-                                         kwargs={'plan_pk': self.kwargs['plan_pk']})
+        context["form_action"] = reverse(
+            "nutrition:meal:add", kwargs={"plan_pk": self.kwargs["plan_pk"]}
+        )
 
         return context
 
 
 class MealEditView(WgerFormMixin, UpdateView):
-    '''
+    """
     Generic view to update an existing meal
-    '''
+    """
 
     model = Meal
-    fields = '__all__'
-    title = ugettext_lazy('Edit meal')
-    form_action_urlname = 'nutrition:meal:edit'
+    fields = "__all__"
+    title = ugettext_lazy("Edit meal")
+    form_action_urlname = "nutrition:meal:edit"
 
     def get_success_url(self):
         return self.object.plan.get_absolute_url()
@@ -77,9 +81,9 @@ class MealEditView(WgerFormMixin, UpdateView):
 
 @login_required
 def delete_meal(request, id):
-    '''
+    """
     Deletes the meal with the given ID
-    '''
+    """
 
     # Load the meal
     meal = get_object_or_404(Meal, pk=id)

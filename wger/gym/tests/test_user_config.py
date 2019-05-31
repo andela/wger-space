@@ -18,24 +18,23 @@ from wger.gym.models import GymUserConfig
 
 
 class EditConfigTestCase(WorkoutManagerEditTestCase):
-    '''
+    """
     Tests editing a user config
-    '''
+    """
 
     pk = 1
     object_class = GymUserConfig
-    url = 'gym:user_config:edit'
-    user_success = 'trainer1'
-    user_fail = 'member1'
-    user_success = ('trainer1',
-                    'trainer2',
-                    'trainer3',
-                    'admin')
-    user_fail = ('general_manager1',
-                 'general_manager2',
-                 'member1',
-                 'member2',
-                 'trainer4',
-                 'manager3')
+    url = "gym:user_config:edit"
+    user_success = "trainer1"
+    user_fail = "member1"
+    user_success = ("trainer1", "trainer2", "trainer3", "admin")
+    user_fail = (
+        "general_manager1",
+        "general_manager2",
+        "member1",
+        "member2",
+        "trainer4",
+        "manager3",
+    )
 
-    data = {'include_inactive': False}
+    data = {"include_inactive": False}

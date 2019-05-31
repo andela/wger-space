@@ -33,14 +33,14 @@ from wger.manager.models import (
     Setting,
     WorkoutLog,
     Schedule,
-    ScheduleStep
+    ScheduleStep,
 )
 from wger.nutrition.models import (
     NutritionPlan,
     Meal,
     MealItem,
     Ingredient,
-    IngredientWeightUnit
+    IngredientWeightUnit,
 )
 
 from wger.utils.language import load_language
@@ -49,12 +49,12 @@ logger = logging.getLogger(__name__)
 
 
 def create_temporary_user():
-    '''
+    """
     Creates a temporary user
-    '''
+    """
     username = uuid.uuid4().hex[:-2]
     password = uuid.uuid4().hex[:-2]
-    email = ''
+    email = ""
 
     user = User.objects.create_user(username, email, password)
     user.save()
@@ -68,9 +68,9 @@ def create_temporary_user():
 
 
 def create_demo_entries(user):
-    '''
+    """
     Creates some demo data for temporary users
-    '''
+    """
 
     # (this is a bit ugly and long...)
     language = load_language()
@@ -80,20 +80,20 @@ def create_demo_entries(user):
     #
     setting_list = []
     weight_log = []
-    workout = Workout(user=user, comment=_('Sample workout'))
+    workout = Workout(user=user, comment=_("Sample workout"))
     workout.save()
     monday = DaysOfWeek.objects.get(pk=1)
     wednesday = DaysOfWeek.objects.get(pk=3)
-    day = Day(training=workout, description=_('Sample day'))
+    day = Day(training=workout, description=_("Sample day"))
     day.save()
     day.day.add(monday)
 
-    day2 = Day(training=workout, description=_('Another sample day'))
+    day2 = Day(training=workout, description=_("Another sample day"))
     day2.save()
     day2.day.add(wednesday)
 
     # Biceps curls with dumbbell
-    if language.short_name == 'de':
+    if language.short_name == "de":
         exercise = Exercise.objects.get(pk=26)
     else:
         exercise = Exercise.objects.get(pk=81)
@@ -107,16 +107,18 @@ def create_demo_entries(user):
     # Weight log entries
     for reps in (8, 10, 12):
         for i in range(1, 8):
-            log = WorkoutLog(user=user,
-                             exercise=exercise,
-                             workout=workout,
-                             reps=reps,
-                             weight=18 - reps + random.randint(1, 4),
-                             date=datetime.date.today() - datetime.timedelta(weeks=i))
+            log = WorkoutLog(
+                user=user,
+                exercise=exercise,
+                workout=workout,
+                reps=reps,
+                weight=18 - reps + random.randint(1, 4),
+                date=datetime.date.today() - datetime.timedelta(weeks=i),
+            )
             weight_log.append(log)
 
     # French press
-    if language.short_name == 'de':
+    if language.short_name == "de":
         exercise = Exercise.objects.get(pk=25)
     else:
         exercise = Exercise.objects.get(pk=84)
@@ -124,21 +126,25 @@ def create_demo_entries(user):
     day_set.save()
     day_set.exercises.add(exercise)
 
-    setting_list.append(Setting(set=day_set, exercise=exercise, reps=8, order=1))
+    setting_list.append(
+        Setting(set=day_set, exercise=exercise, reps=8, order=1)
+    )
 
     # Weight log entries
     for reps in (7, 10):
         for i in range(1, 8):
-            log = WorkoutLog(user=user,
-                             exercise=exercise,
-                             workout=workout,
-                             reps=reps,
-                             weight=30 - reps + random.randint(1, 4),
-                             date=datetime.date.today() - datetime.timedelta(weeks=i))
+            log = WorkoutLog(
+                user=user,
+                exercise=exercise,
+                workout=workout,
+                reps=reps,
+                weight=30 - reps + random.randint(1, 4),
+                date=datetime.date.today() - datetime.timedelta(weeks=i),
+            )
             weight_log.append(log)
 
     # Squats
-    if language.short_name == 'de':
+    if language.short_name == "de":
         exercise = Exercise.objects.get(pk=6)
     else:
         exercise = Exercise.objects.get(pk=111)
@@ -146,21 +152,25 @@ def create_demo_entries(user):
     day_set.save()
     day_set.exercises.add(exercise)
 
-    setting_list.append(Setting(set=day_set, exercise=exercise, reps=10, order=1))
+    setting_list.append(
+        Setting(set=day_set, exercise=exercise, reps=10, order=1)
+    )
 
     # Weight log entries
     for reps in (5, 10, 12):
         for i in range(1, 8):
-            log = WorkoutLog(user=user,
-                             exercise=exercise,
-                             workout=workout,
-                             reps=reps,
-                             weight=110 - reps + random.randint(1, 10),
-                             date=datetime.date.today() - datetime.timedelta(weeks=i))
+            log = WorkoutLog(
+                user=user,
+                exercise=exercise,
+                workout=workout,
+                reps=reps,
+                weight=110 - reps + random.randint(1, 10),
+                date=datetime.date.today() - datetime.timedelta(weeks=i),
+            )
             weight_log.append(log)
 
     # Crunches
-    if language.short_name == 'de':
+    if language.short_name == "de":
         exercise = Exercise.objects.get(pk=4)
     else:
         exercise = Exercise.objects.get(pk=91)
@@ -168,20 +178,32 @@ def create_demo_entries(user):
     day_set.save()
     day_set.exercises.add(exercise)
 
-    setting_list.append(Setting(set=day_set, exercise=exercise, reps=30, order=1))
-    setting_list.append(Setting(set=day_set, exercise=exercise, reps=99, order=2))
-    setting_list.append(Setting(set=day_set, exercise=exercise, reps=35, order=3))
+    setting_list.append(
+        Setting(set=day_set, exercise=exercise, reps=30, order=1)
+    )
+    setting_list.append(
+        Setting(set=day_set, exercise=exercise, reps=99, order=2)
+    )
+    setting_list.append(
+        Setting(set=day_set, exercise=exercise, reps=35, order=3)
+    )
 
     # Leg raises, supersets with crunches
-    if language.short_name == 'de':
+    if language.short_name == "de":
         exercise = Exercise.objects.get(pk=35)
     else:
         exercise = Exercise.objects.get(pk=126)
     day_set.exercises.add(exercise)
 
-    setting_list.append(Setting(set=day_set, exercise=exercise, reps=30, order=1))
-    setting_list.append(Setting(set=day_set, exercise=exercise, reps=40, order=2))
-    setting_list.append(Setting(set=day_set, exercise=exercise, reps=99, order=3))
+    setting_list.append(
+        Setting(set=day_set, exercise=exercise, reps=30, order=1)
+    )
+    setting_list.append(
+        Setting(set=day_set, exercise=exercise, reps=40, order=2)
+    )
+    setting_list.append(
+        Setting(set=day_set, exercise=exercise, reps=99, order=3)
+    )
 
     Setting.objects.bulk_create(setting_list)
 
@@ -196,9 +218,11 @@ def create_demo_entries(user):
     for i in range(1, 20):
         creation_date = datetime.date.today() - datetime.timedelta(days=i)
         if creation_date not in existing_entries:
-            entry = WeightEntry(user=user,
-                                weight=80 + 0.5 * i + random.randint(1, 3),
-                                date=creation_date)
+            entry = WeightEntry(
+                user=user,
+                weight=80 + 0.5 * i + random.randint(1, 3),
+                date=creation_date,
+            )
             temp.append(entry)
     WeightEntry.objects.bulk_create(temp)
 
@@ -208,7 +232,7 @@ def create_demo_entries(user):
     plan = NutritionPlan()
     plan.user = user
     plan.language = language
-    plan.description = _('Sample nutrional plan')
+    plan.description = _("Sample nutrional plan")
     plan.save()
 
     # Breakfast
@@ -219,7 +243,7 @@ def create_demo_entries(user):
     meal.save()
 
     # Oatmeal
-    if language.short_name == 'de':
+    if language.short_name == "de":
         ingredient = Ingredient.objects.get(pk=8197)
     else:
         ingredient = Ingredient.objects.get(pk=2126)
@@ -232,7 +256,7 @@ def create_demo_entries(user):
     mealitem.save()
 
     # Milk
-    if language.short_name == 'de':
+    if language.short_name == "de":
         ingredient = Ingredient.objects.get(pk=8198)
     else:
         ingredient = Ingredient.objects.get(pk=154)
@@ -245,7 +269,7 @@ def create_demo_entries(user):
     mealitem.save()
 
     # Protein powder
-    if language.short_name == 'de':
+    if language.short_name == "de":
         ingredient = Ingredient.objects.get(pk=8244)
     else:
         ingredient = Ingredient.objects.get(pk=196)
@@ -266,7 +290,7 @@ def create_demo_entries(user):
     meal.save()
 
     # Bread, in slices
-    if language.short_name == 'de':
+    if language.short_name == "de":
         ingredient = Ingredient.objects.get(pk=8225)
         unit = None
         amount = 80
@@ -284,7 +308,7 @@ def create_demo_entries(user):
     mealitem.save()
 
     # Turkey
-    if language.short_name == 'de':
+    if language.short_name == "de":
         ingredient = Ingredient.objects.get(pk=8201)
     else:
         ingredient = Ingredient.objects.get(pk=1643)
@@ -297,7 +321,7 @@ def create_demo_entries(user):
     mealitem.save()
 
     # Cottage cheese
-    if language.short_name == 'de':
+    if language.short_name == "de":
         ingredient = Ingredient.objects.get(pk=8222)  # TODO: check this!
     else:
         ingredient = Ingredient.objects.get(pk=17)
@@ -310,7 +334,7 @@ def create_demo_entries(user):
     mealitem.save()
 
     # Tomato, one
-    if language.short_name == 'de':
+    if language.short_name == "de":
         ingredient = Ingredient.objects.get(pk=8217)
         unit = None
         amount = 120
@@ -340,16 +364,25 @@ def create_demo_entries(user):
     #
 
     # create some empty workouts to fill the list
-    workout2 = Workout(user=user, comment=_('Placeholder workout nr {0} for schedule').format(1))
+    workout2 = Workout(
+        user=user,
+        comment=_("Placeholder workout nr {0} for schedule").format(1),
+    )
     workout2.save()
-    workout3 = Workout(user=user, comment=_('Placeholder workout nr {0} for schedule').format(2))
+    workout3 = Workout(
+        user=user,
+        comment=_("Placeholder workout nr {0} for schedule").format(2),
+    )
     workout3.save()
-    workout4 = Workout(user=user, comment=_('Placeholder workout nr {0} for schedule').format(3))
+    workout4 = Workout(
+        user=user,
+        comment=_("Placeholder workout nr {0} for schedule").format(3),
+    )
     workout4.save()
 
     schedule = Schedule()
     schedule.user = user
-    schedule.name = _('My cool workout schedule')
+    schedule.name = _("My cool workout schedule")
     schedule.start_date = datetime.date.today() - datetime.timedelta(weeks=4)
     schedule.is_active = True
     schedule.is_loop = True
@@ -388,7 +421,7 @@ def create_demo_entries(user):
     # Add two more schedules, to make the overview more interesting
     schedule = Schedule()
     schedule.user = user
-    schedule.name = _('Empty placeholder schedule')
+    schedule.name = _("Empty placeholder schedule")
     schedule.start_date = datetime.date.today() - datetime.timedelta(weeks=15)
     schedule.is_active = False
     schedule.is_loop = False
@@ -403,7 +436,7 @@ def create_demo_entries(user):
 
     schedule = Schedule()
     schedule.user = user
-    schedule.name = _('Empty placeholder schedule')
+    schedule.name = _("Empty placeholder schedule")
     schedule.start_date = datetime.date.today() - datetime.timedelta(weeks=30)
     schedule.is_active = False
     schedule.is_loop = False

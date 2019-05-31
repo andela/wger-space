@@ -20,13 +20,15 @@ from wger.core.tests.base_testcase import WorkoutManagerTestCase
 
 
 class RobotsTxtTestCase(WorkoutManagerTestCase):
-    '''
+    """
     Tests the generated robots.txt
-    '''
+    """
 
     def test_robots(self):
 
-        response = self.client.get(reverse('robots'))
+        response = self.client.get(reverse("robots"))
         for lang in Language.objects.all():
-            self.assertTrue('wger.de/{0}/sitemap.xml'.format(lang.short_name)
-                            in six.text_type(response.content))
+            self.assertTrue(
+                "wger.de/{0}/sitemap.xml".format(lang.short_name)
+                in six.text_type(response.content)
+            )

@@ -23,9 +23,9 @@ from wger.core.models import UserCache
 
 
 def update_activity_cache(sender, instance, **kwargs):
-    '''
+    """
     Update the user's cached last activity date
-    '''
+    """
 
     user = instance.user
     user.usercache.last_activity = get_user_last_activity(user)

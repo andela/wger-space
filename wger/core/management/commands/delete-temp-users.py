@@ -22,11 +22,11 @@ from wger.core.models import UserProfile
 
 
 class Command(BaseCommand):
-    '''
+    """
     Helper admin command to clean up demo users, to be called e.g. by cron
-    '''
+    """
 
-    help = 'Deletes all temporary users older than 1 week'
+    help = "Deletes all temporary users older than 1 week"
 
     def handle(self, **options):
 
@@ -35,7 +35,7 @@ class Command(BaseCommand):
         for profile in profile_list:
             delta = now() - profile.user.date_joined
 
-            if (delta >= datetime.timedelta(7)):
+            if delta >= datetime.timedelta(7):
                 counter += 1
                 profile.user.delete()
 

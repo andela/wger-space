@@ -18,7 +18,7 @@ from django.apps import AppConfig
 
 
 class ConfigConfig(AppConfig):
-    name = 'wger.config'
+    name = "wger.config"
     verbose_name = "Config"
 
     def ready(self):

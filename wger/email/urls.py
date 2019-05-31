@@ -22,15 +22,17 @@ from wger.email.views import gym
 
 # sub patterns for email lists
 patterns_email = [
-    url(r'^overview/gym/(?P<gym_pk>\d+)$',
+    url(
+        r"^overview/gym/(?P<gym_pk>\d+)$",
         gym.EmailLogListView.as_view(),
-        name='overview'),
-    url(r'^add/gym/(?P<gym_pk>\d+)$',
+        name="overview",
+    ),
+    url(
+        r"^add/gym/(?P<gym_pk>\d+)$",
         gym.EmailListFormPreview(EmailListForm),
-        name='add-gym'),
+        name="add-gym",
+    ),
 ]
 
 
-urlpatterns = [
-    url(r'^email/', include(patterns_email, namespace="email")),
-]
+urlpatterns = [url(r"^email/", include(patterns_email, namespace="email"))]

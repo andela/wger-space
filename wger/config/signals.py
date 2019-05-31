@@ -24,15 +24,17 @@ from wger.core.models import Language
 
 @receiver(post_save, sender=Language)
 def init_language_config(sender, instance, created, **kwargs):
-    '''
+    """
     Creates language config entries when new languages are created
     (all combinations of all languages)
-    '''
+    """
     for language_source in Language.objects.all():
         for language_target in Language.objects.all():
-            if not LanguageConfig.objects.filter(language=language_source)\
-                                         .filter(language_target=language_target)\
-                                         .exists():
+            if (
+                not LanguageConfig.objects.filter(language=language_source)
+                .filter(language_target=language_target)
+                .exists()
+            ):
 
                 for item in LanguageConfig.SHOW_ITEM_LIST:
                     config = LanguageConfig()

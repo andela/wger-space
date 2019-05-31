@@ -34,7 +34,7 @@ from wger.utils.helpers import next_weekday, check_token
 logger = logging.getLogger(__name__)
 
 
-'''
+"""
 Exports workouts and schedules as an iCal file that can be imported to a
 calendaring application.
 
@@ -44,24 +44,24 @@ to make this work, looking at the module test files or the official RF is
 
 * https://tools.ietf.org/html/rfc5545
 * https://github.com/collective/icalendar/tree/master/src/icalendar/tests
-'''
+"""
 
 
 # Helper functions
 def get_calendar():
-    '''
+    """
     Creates and returns a calendar object
 
     :return: Calendar
-    '''
+    """
     calendar = Calendar()
-    calendar.add('prodid', '-//wger Workout Manager//wger.de//')
-    calendar.add('version', get_version())
+    calendar.add("prodid", "-//wger Workout Manager//wger.de//")
+    calendar.add("version", get_version())
     return calendar
 
 
 def get_events_workout(calendar, workout, duration, start_date=None):
-    '''
+    """
     Creates all necessary events from the given workout and adds them to
     the calendar. Each event's occurrence ist set to weekly (one event for
     each training day).
@@ -71,40 +71,44 @@ def get_events_workout(calendar, workout, duration, start_date=None):
     :param duration: duration in weeks
     :param start_date: start date, default: profile default
     :return: None
-    '''
+    """
 
     start_date = start_date if start_date else workout.creation_date
     end_date = start_date + datetime.timedelta(weeks=duration)
     generator = UIDGenerator()
     site = Site.objects.get_current()
 
-    for day in workout.canonical_representation['day_list']:
+    for day in workout.canonical_representation["day_list"]:
 
         # Make the description of the event with the day's exercises
         description_list = []
-        for set in day['set_list']:
-            for exercise in set['exercise_list']:
-                description_list.append(six.text_type(exercise['obj']))
-        description = ', '.join(description_list) if description_list else day['obj'].description
+        for set in day["set_list"]:
+            for exercise in set["exercise_list"]:
+                description_list.append(six.text_type(exercise["obj"]))
+        description = (
+            ", ".join(description_list)
+            if description_list
+            else day["obj"].description
+        )
 
         # Make an event for each weekday
-        for weekday in day['days_of_week']['day_list']:
+        for weekday in day["days_of_week"]["day_list"]:
             event = Event()
-            event.add('summary', day['obj'].description)
-            event.add('description', description)
-            event.add('dtstart', next_weekday(start_date, weekday.id - 1))
-            event.add('dtend', next_weekday(start_date, weekday.id - 1))
-            event.add('rrule', {'freq': 'weekly', 'until': end_date})
-            event['uid'] = generator.uid(host_name=site.domain)
-            event.add('priority', 5)
+            event.add("summary", day["obj"].description)
+            event.add("description", description)
+            event.add("dtstart", next_weekday(start_date, weekday.id - 1))
+            event.add("dtend", next_weekday(start_date, weekday.id - 1))
+            event.add("rrule", {"freq": "weekly", "until": end_date})
+            event["uid"] = generator.uid(host_name=site.domain)
+            event.add("priority", 5)
             calendar.add_component(event)
 
 
 # Views
 def export(request, pk, uidb64=None, token=None):
-    '''
+    """
     Export the current workout as an iCal file
-    '''
+    """
 
     # Load the workout
     if uidb64 is not None and token is not None:
@@ -121,21 +125,24 @@ def export(request, pk, uidb64=None, token=None):
     calendar = get_calendar()
 
     # Create the events and add them to the calendar
-    get_events_workout(calendar, workout, workout.user.userprofile.workout_duration)
+    get_events_workout(
+        calendar, workout, workout.user.userprofile.workout_duration
+    )
 
     # Send the file to the user
-    response = HttpResponse(content_type='text/calendar')
-    response['Content-Disposition'] = \
-        'attachment; filename=Calendar-workout-{0}.ics'.format(workout.pk)
+    response = HttpResponse(content_type="text/calendar")
+    response[
+        "Content-Disposition"
+    ] = "attachment; filename=Calendar-workout-{0}.ics".format(workout.pk)
     response.write(calendar.to_ical())
-    response['Content-Length'] = len(response.content)
+    response["Content-Length"] = len(response.content)
     return response
 
 
 def export_schedule(request, pk, uidb64=None, token=None):
-    '''
+    """
     Export the current schedule as an iCal file
-    '''
+    """
 
     # Load the schedule
     if uidb64 is not None and token is not None:
@@ -158,9 +165,10 @@ def export_schedule(request, pk, uidb64=None, token=None):
         start_date = start_date + datetime.timedelta(weeks=step.duration)
 
     # Send the file to the user
-    response = HttpResponse(content_type='text/calendar')
-    response['Content-Disposition'] = \
-        'attachment; filename=Calendar-schedule-{0}.ics'.format(schedule.pk)
+    response = HttpResponse(content_type="text/calendar")
+    response[
+        "Content-Disposition"
+    ] = "attachment; filename=Calendar-schedule-{0}.ics".format(schedule.pk)
     response.write(calendar.to_ical())
-    response['Content-Length'] = len(response.content)
+    response["Content-Length"] = len(response.content)
     return response

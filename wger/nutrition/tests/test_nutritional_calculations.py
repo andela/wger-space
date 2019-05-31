@@ -24,9 +24,9 @@ logger = logging.getLogger(__name__)
 
 
 class NutritionalValuesCalculationsTestCase(WorkoutManagerTestCase):
-    '''
+    """
     Tests the nutritional values calculators in the different models
-    '''
+    """
 
     def test_calculations(self):
         plan = models.NutritionPlan(user_id=1, language_id=1)
@@ -52,13 +52,16 @@ class NutritionalValuesCalculationsTestCase(WorkoutManagerTestCase):
         result_item = item.get_nutritional_values()
 
         for i in result_item:
-            self.assertEqual(result_item[i], Decimal(getattr(ingredient, i)).quantize(TWOPLACES))
+            self.assertEqual(
+                result_item[i],
+                Decimal(getattr(ingredient, i)).quantize(TWOPLACES),
+            )
 
         result_meal = meal.get_nutritional_values()
         self.assertEqual(result_item, result_meal)
 
         result_plan = plan.get_nutritional_values()
-        self.assertEqual(result_meal, result_plan['total'])
+        self.assertEqual(result_meal, result_plan["total"])
 
         # One ingredient, 1 x unit 3
         item.delete()
@@ -73,14 +76,18 @@ class NutritionalValuesCalculationsTestCase(WorkoutManagerTestCase):
         result_item = item.get_nutritional_values()
 
         for i in result_item:
-            self.assertEqual(result_item[i],
-                             (getattr(ingredient, i) * Decimal(12.0) / 100).quantize(TWOPLACES))
+            self.assertEqual(
+                result_item[i],
+                (getattr(ingredient, i) * Decimal(12.0) / 100).quantize(
+                    TWOPLACES
+                ),
+            )
 
         result_meal = meal.get_nutritional_values()
         self.assertEqual(result_item, result_meal)
 
         result_plan = plan.get_nutritional_values()
-        self.assertEqual(result_meal, result_plan['total'])
+        self.assertEqual(result_meal, result_plan["total"])
 
         # Add another ingredient, 200 gr
         item2 = models.MealItem()
@@ -102,7 +109,7 @@ class NutritionalValuesCalculationsTestCase(WorkoutManagerTestCase):
         self.assertEqual(result_total, result_meal)
 
         result_plan = plan.get_nutritional_values()
-        self.assertEqual(result_meal, result_plan['total'])
+        self.assertEqual(result_meal, result_plan["total"])
 
         # Add another ingredient, 20 gr
         item3 = models.MealItem()
@@ -116,29 +123,47 @@ class NutritionalValuesCalculationsTestCase(WorkoutManagerTestCase):
         result_item3 = item3.get_nutritional_values()
 
         for i in result_item3:
-            self.assertEqual(result_item3[i],
-                             (getattr(ingredient3, i) * Decimal(20.0) / 100).quantize(TWOPLACES))
+            self.assertEqual(
+                result_item3[i],
+                (getattr(ingredient3, i) * Decimal(20.0) / 100).quantize(
+                    TWOPLACES
+                ),
+            )
             result_total[i] = result_total[i] + result_item3[i]
 
         result_meal = meal.get_nutritional_values()
         self.assertEqual(result_total, result_meal)
 
         result_plan = plan.get_nutritional_values()
-        self.assertEqual(result_meal, result_plan['total'])
+        self.assertEqual(result_meal, result_plan["total"])
 
     def test_calculations_user(self):
-        '''
+        """
         Tests the calculations
         :return:
-        '''
-        self.user_login('test')
+        """
+        self.user_login("test")
         plan = models.NutritionPlan.objects.get(pk=4)
         values = plan.get_nutritional_values()
 
-        self.assertEqual(values['percent']['carbohydrates'], Decimal(29.79).quantize(TWOPLACES))
-        self.assertEqual(values['percent']['fat'], Decimal(20.36).quantize(TWOPLACES))
-        self.assertEqual(values['percent']['protein'], Decimal(26.06).quantize(TWOPLACES))
+        self.assertEqual(
+            values["percent"]["carbohydrates"],
+            Decimal(29.79).quantize(TWOPLACES),
+        )
+        self.assertEqual(
+            values["percent"]["fat"], Decimal(20.36).quantize(TWOPLACES)
+        )
+        self.assertEqual(
+            values["percent"]["protein"], Decimal(26.06).quantize(TWOPLACES)
+        )
 
-        self.assertEqual(values['per_kg']['carbohydrates'], Decimal(4.96).quantize(TWOPLACES))
-        self.assertEqual(values['per_kg']['fat'], Decimal(1.51).quantize(TWOPLACES))
-        self.assertEqual(values['per_kg']['protein'], Decimal(4.33).quantize(TWOPLACES))
+        self.assertEqual(
+            values["per_kg"]["carbohydrates"],
+            Decimal(4.96).quantize(TWOPLACES),
+        )
+        self.assertEqual(
+            values["per_kg"]["fat"], Decimal(1.51).quantize(TWOPLACES)
+        )
+        self.assertEqual(
+            values["per_kg"]["protein"], Decimal(4.33).quantize(TWOPLACES)
+        )

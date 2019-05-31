@@ -8,15 +8,17 @@ import sortedm2m.fields
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('manager', '0001_initial'),
-    ]
+    dependencies = [("manager", "0001_initial")]
 
     operations = [
         AlterSortedManyToManyField(
-            model_name='set',
-            name='exercises',
-            field=sortedm2m.fields.SortedManyToManyField(help_text=None, to='exercises.Exercise', verbose_name='Exercises'),
+            model_name="set",
+            name="exercises",
+            field=sortedm2m.fields.SortedManyToManyField(
+                help_text=None,
+                to="exercises.Exercise",
+                verbose_name="Exercises",
+            ),
             preserve_default=True,
         )
     ]

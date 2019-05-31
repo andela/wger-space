@@ -21,96 +21,105 @@ from wger.core.tests.base_testcase import (
     WorkoutManagerTestCase,
     WorkoutManagerDeleteTestCase,
     WorkoutManagerEditTestCase,
-    WorkoutManagerAddTestCase
+    WorkoutManagerAddTestCase,
 )
 
 
 class RepresentationTestCase(WorkoutManagerTestCase):
-    '''
+    """
     Test the representation of a model
-    '''
+    """
 
     def test_representation(self):
-        '''
+        """
         Test that the representation of an object is correct
-        '''
-        self.assertEqual("{0}".format(RepetitionUnit.objects.get(pk=1)), 'Repetitions')
+        """
+        self.assertEqual(
+            "{0}".format(RepetitionUnit.objects.get(pk=1)), "Repetitions"
+        )
 
 
 class OverviewTest(WorkoutManagerAccessTestCase):
-    '''
+    """
     Tests the settings unit overview page
-    '''
+    """
 
-    url = 'core:repetition-unit:list'
+    url = "core:repetition-unit:list"
     anonymous_fail = True
 
 
 class AddTestCase(WorkoutManagerAddTestCase):
-    '''
+    """
     Tests adding a new unit
-    '''
+    """
 
     object_class = RepetitionUnit
-    url = 'core:repetition-unit:add'
-    data = {'name': 'Furlongs'}
-    user_success = 'admin',
-    user_fail = ('general_manager1',
-                 'general_manager2',
-                 'member1',
-                 'member2',
-                 'trainer2',
-                 'trainer3',
-                 'trainer4',
-                 'manager3')
+    url = "core:repetition-unit:add"
+    data = {"name": "Furlongs"}
+    user_success = ("admin",)
+    user_fail = (
+        "general_manager1",
+        "general_manager2",
+        "member1",
+        "member2",
+        "trainer2",
+        "trainer3",
+        "trainer4",
+        "manager3",
+    )
 
 
 class DeleteTestCase(WorkoutManagerDeleteTestCase):
-    '''
+    """
     Tests deleting a unit
-    '''
+    """
 
     pk = 1
     object_class = RepetitionUnit
-    url = 'core:repetition-unit:delete'
-    user_success = 'admin',
-    user_fail = ('general_manager1',
-                 'general_manager2',
-                 'member1',
-                 'member2',
-                 'trainer2',
-                 'trainer3',
-                 'trainer4',
-                 'manager3')
+    url = "core:repetition-unit:delete"
+    user_success = ("admin",)
+    user_fail = (
+        "general_manager1",
+        "general_manager2",
+        "member1",
+        "member2",
+        "trainer2",
+        "trainer3",
+        "trainer4",
+        "manager3",
+    )
 
 
 class EditTestCase(WorkoutManagerEditTestCase):
-    '''
+    """
     Tests editing a unit
-    '''
+    """
 
     pk = 1
     object_class = RepetitionUnit
-    url = 'core:repetition-unit:edit'
-    data = {'name': 'Furlongs'}
-    user_success = 'admin',
-    user_fail = ('general_manager1',
-                 'general_manager2',
-                 'member1',
-                 'member2',
-                 'trainer2',
-                 'trainer3',
-                 'trainer4',
-                 'manager3')
+    url = "core:repetition-unit:edit"
+    data = {"name": "Furlongs"}
+    user_success = ("admin",)
+    user_fail = (
+        "general_manager1",
+        "general_manager2",
+        "member1",
+        "member2",
+        "trainer2",
+        "trainer3",
+        "trainer4",
+        "manager3",
+    )
 
 
 class ApiTestCase(api_base_test.ApiBaseResourceTestCase):
-    '''
+    """
     Tests the unit resource
-    '''
+    """
+
     pk = 1
     resource = RepetitionUnit
     private_resource = False
 
     def get_resource_name(self):
-        return 'setting-repetitionunit'
+        return "setting-repetitionunit"

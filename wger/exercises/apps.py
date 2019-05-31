@@ -18,7 +18,7 @@ from django.apps import AppConfig
 
 
 class ExerciseConfig(AppConfig):
-    name = 'wger.exercises'
+    name = "wger.exercises"
     verbose_name = "Exercise"
 
     def ready(self):

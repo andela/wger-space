@@ -28,22 +28,23 @@ logger = logging.getLogger(__name__)
 
 
 class GymConfigUpdateView(WgerFormMixin, UpdateView):
-    '''
+    """
     Generic view to edit the gym config table
-    '''
+    """
+
     model = GymConfig
-    fields = '__all__'
-    permission_required = 'config.change_gymconfig'
-    success_url = reverse_lazy('gym:gym:list')
+    fields = "__all__"
+    permission_required = "config.change_gymconfig"
+    success_url = reverse_lazy("gym:gym:list")
 
     def get_object(self):
-        '''
+        """
         Return the only gym config object
-        '''
+        """
         return GymConfig.objects.get(pk=1)
 
     def get_context_data(self, **kwargs):
         context = super(GymConfigUpdateView, self).get_context_data(**kwargs)
-        context['form_action'] = reverse('config:gym_config:edit')
-        context['title'] = _('Edit')
+        context["form_action"] = reverse("config:gym_config:edit")
+        context["title"] = _("Edit")
         return context

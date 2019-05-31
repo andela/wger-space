@@ -25,122 +25,130 @@ from wger.gym.models import Gym
 
 
 class GymRepresentationTestCase(WorkoutManagerTestCase):
-    '''
+    """
     Test the representation of a model
-    '''
+    """
 
     def test_representation(self):
-        '''
+        """
         Test that the representation of an object is correct
-        '''
-        self.assertEqual("{0}".format(Gym.objects.get(pk=1)), 'Test 123')
+        """
+        self.assertEqual("{0}".format(Gym.objects.get(pk=1)), "Test 123")
 
 
 class GymOverviewTest(WorkoutManagerAccessTestCase):
-    '''
+    """
     Tests accessing the gym overview page
-    '''
-    url = 'gym:gym:list'
+    """
+
+    url = "gym:gym:list"
     anonymous_fail = True
-    user_success = ('admin',
-                    'general_manager1',
-                    'general_manager2')
-    user_fail = ('member1',
-                 'member2',
-                 'trainer2',
-                 'trainer3',
-                 'trainer4',
-                 'manager3')
+    user_success = ("admin", "general_manager1", "general_manager2")
+    user_fail = (
+        "member1",
+        "member2",
+        "trainer2",
+        "trainer3",
+        "trainer4",
+        "manager3",
+    )
 
 
 class GymUserOverviewTest(WorkoutManagerAccessTestCase):
-    '''
+    """
     Tests accessing the gym user overview page
-    '''
-    url = reverse_lazy('gym:gym:user-list', kwargs={'pk': 1})
+    """
+
+    url = reverse_lazy("gym:gym:user-list", kwargs={"pk": 1})
     anonymous_fail = True
-    user_success = ('admin',
-                    'trainer2',
-                    'trainer3',
-                    'manager1',
-                    'general_manager1',
-                    'general_manager2')
-    user_fail = ('member1',
-                 'member2',
-                 'trainer4',
-                 'manager3')
+    user_success = (
+        "admin",
+        "trainer2",
+        "trainer3",
+        "manager1",
+        "general_manager1",
+        "general_manager2",
+    )
+    user_fail = ("member1", "member2", "trainer4", "manager3")
 
 
 class AddGymTestCase(WorkoutManagerAddTestCase):
-    '''
+    """
     Tests adding a new gym
-    '''
+    """
+
     object_class = Gym
-    url = 'gym:gym:add'
-    data = {'name': 'The name here'}
-    user_success = ('admin',
-                    'general_manager1')
-    user_fail = ('member1',
-                 'member2',
-                 'trainer2',
-                 'trainer3',
-                 'trainer4',
-                 'manager1',
-                 'manager3')
+    url = "gym:gym:add"
+    data = {"name": "The name here"}
+    user_success = ("admin", "general_manager1")
+    user_fail = (
+        "member1",
+        "member2",
+        "trainer2",
+        "trainer3",
+        "trainer4",
+        "manager1",
+        "manager3",
+    )
 
 
 class DeleteGymTestCase(WorkoutManagerDeleteTestCase):
-    '''
+    """
     Tests deleting a gym
-    '''
+    """
 
     pk = 2
     object_class = Gym
-    url = 'gym:gym:delete'
-    user_success = ('admin',
-                    'general_manager1',
-                    'general_manager2')
-    user_fail = ('member1',
-                 'member2',
-                 'trainer2',
-                 'trainer3',
-                 'trainer4',
-                 'manager1',
-                 'manager3')
+    url = "gym:gym:delete"
+    user_success = ("admin", "general_manager1", "general_manager2")
+    user_fail = (
+        "member1",
+        "member2",
+        "trainer2",
+        "trainer3",
+        "trainer4",
+        "manager1",
+        "manager3",
+    )
+
 
 delete_testcase_add_methods(DeleteGymTestCase)
 
 
 class EditGymTestCase(WorkoutManagerEditTestCase):
-    '''
+    """
     Tests editing a gym
-    '''
+    """
 
     object_class = Gym
-    url = 'gym:gym:edit'
+    url = "gym:gym:edit"
     pk = 1
-    data = {'name': 'A different name'}
-    user_success = ('admin',
-                    'manager1',
-                    'general_manager1',
-                    'general_manager2')
-    user_fail = ('member1',
-                 'member2',
-                 'trainer2',
-                 'trainer3',
-                 'trainer4',
-                 'manager3')
+    data = {"name": "A different name"}
+    user_success = (
+        "admin",
+        "manager1",
+        "general_manager1",
+        "general_manager2",
+    )
+    user_fail = (
+        "member1",
+        "member2",
+        "trainer2",
+        "trainer3",
+        "trainer4",
+        "manager3",
+    )
 
 
 class GymTestCase(WorkoutManagerTestCase):
-    '''
+    """
     Tests other gym methods
-    '''
+    """
 
     def test_delete_gym(self):
-        '''
+        """
         Tests that deleting a gym also removes it from all user profiles
-        '''
+        """
         gym = Gym.objects.get(pk=1)
         self.assertEqual(UserProfile.objects.filter(gym=gym).count(), 17)
 
