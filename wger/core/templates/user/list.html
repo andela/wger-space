@@ -5,10 +5,22 @@
 
 
 {% block content %}
+    <p>
+        <button id="btn-active" style="display:none" onclick="renderActiveUsers()">View Active Users</button>
+        <button id="btn-inactive" onclick="renderInactiveUsers()">View Deactivated Users</button>
+    </p>
+    <div id="active">
     {% include 'gym/partial_user_list.html' %}
+    </div>
+    <div id="inactive" style="display: None">
+    {% include 'gym/partial_inactive_user_list.html' %}
+    </div>
+
+    <script src="{% static 'js/wger-core.js' %}" ></script>
 {% endblock %}
 
 
 {% block sidebar %}
-
+    
 {% endblock %}
+

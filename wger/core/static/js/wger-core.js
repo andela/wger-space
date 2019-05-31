@@ -698,3 +698,26 @@ $(document).ready(function () {
     window.location.href = targetUrl;
   });
 });
+
+function renderActiveUsers() {
+  var partial_active = document.getElementById("active");
+  var partial_inactive = document.getElementById("inactive");
+  var btn_active = document.getElementById("btn-active");
+  var btn_inactive = document.getElementById("btn-inactive");
+  partial_inactive.style.display = 'none';
+  btn_active.style.display = 'none'
+  btn_inactive.style.display = 'block'
+  partial_active.style.display = 'block';
+}
+
+function renderInactiveUsers() {
+  var partial_active = document.getElementById("active"); 
+  var partial_inactive = document.getElementById("inactive"); 
+  var btn_inactive = document.getElementById("btn-inactive");
+  var btn_active = document.getElementById("btn-active");
+  partial_inactive.style.display = 'block';
+  partial_active.style.display = 'none';
+  btn_active.style.display = 'block';
+  btn_inactive.style.display = 'none';
+}
+
