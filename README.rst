@@ -7,6 +7,9 @@
     :target: https://coveralls.io/github/andela/wger-space?branch=ch-circle-ci-integrations-with-slack-166185758
 
 
+.. image:: https://api.codeclimate.com/v1/badges/39ab17eaa3b33cd7de9a/maintainability
+   :target: https://codeclimate.com/github/andela/wger-space/maintainability
+   :alt: Maintainability
 
     
 Thank you for downloading wger Workout Manager. wger (ˈvɛɡɐ) is a free, open source web
