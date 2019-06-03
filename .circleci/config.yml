@@ -1,0 +1,36 @@
+version: 2
+jobs:
+  build-job:
+    docker:
+      - image: circleci/python:3.5
+    environment:
+      repo_token: COVERALLS_REPO_TOKEN
+      
+      
+    working_directory: ~/wger-space
+    steps:
+      - checkout
+      - run:
+          name: Install Python dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            sudo pip install -r requirements_devel.txt
+            sudo pip install pyYAML
+            sudo pip install coveralls flake8
+            invoke create-settings --settings-path ~/wger-space/settings.py 
+      - run:
+          name: Run flake8
+          command: |
+            flake8 wger --show-source --statistics
+      - run:
+          name: Run tests
+          command: |
+            coverage run manage.py test 
+            coverage xml && coverage report
+            coveralls
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build-job
