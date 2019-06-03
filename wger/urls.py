@@ -210,6 +210,7 @@ urlpatterns = i18n_patterns(
     url(r"exercise/", include("wger.exercises.urls", namespace="exercise")),
     url(r"weight/", include("wger.weight.urls", namespace="weight")),
     url(r"nutrition/", include("wger.nutrition.urls", namespace="nutrition")),
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
     url(
         r"software/",
         include(

@@ -20,6 +20,9 @@ parts/
 sdist/
 var/
 venv-django/
+venv-django/bin
+.env
+.vscode/
 *.egg-info/
 .installed.cfg
 *.egg
