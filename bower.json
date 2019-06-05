@@ -13,14 +13,14 @@
     "tests"
   ],
   "dependencies": {
-    "bootstrap": "^4.3.1",
+    "bootstrap": "3.3.x",
     "datatables": "DataTables#^1.10.19",
-    "components-font-awesome": "^5.4.2",
+    "components-font-awesome": "4.7.x",
     "metrics-graphics": "^2.15.6",
     "devbridge-autocomplete": "1.2.x",
     "jquery": "2.1.x",
     "Sortable": "sortablejs#1.4.x",
-    "shariff": "^3.2.1",
+    "shariff": "1.24.1",
     "tinymce": "tinymce-dist#^5.0.6"
   }
 }
