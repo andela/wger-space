@@ -1,12 +1,12 @@
 {% load i18n staticfiles %}
-<h1>Active Users</h1>
+<h1>De-activated Users</h1>
 <link rel="stylesheet" type="text/css" href="{% static 'bower_components/datatables/media/css/dataTables.bootstrap.min.css' %}">
 <script src="{% static 'bower_components/datatables/media/js/jquery.dataTables.min.js' %}" ></script>
 <script src="{% static 'bower_components/datatables/media/js/dataTables.bootstrap.min.js' %}" ></script>
 <script>
 $(document).ready( function () {
     /* Make table sortable */
-    $('#main_member_list_active').DataTable({
+    $('#main_member_list_inactive').DataTable({
         paging: false,
         bFilter: true,
         bInfo : false
@@ -14,7 +14,7 @@ $(document).ready( function () {
 });
 </script>
 
-<table class="table table-hover" id="main_member_list_active">
+<table class="table table-hover" id="main_member_list_inactive">
 <thead>
 <tr>
     {% for key in user_table.keys %}
@@ -24,7 +24,7 @@ $(document).ready( function () {
 </thead>
 <tbody>
 {% for current_user in user_table.users %}
-    {% if current_user.obj.is_active %}
+    {% if not current_user.obj.is_active %}
         <tr>
             <td>
                 {{current_user.obj.pk}}
