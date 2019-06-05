@@ -1,5 +1,5 @@
-.. image:: https://circleci.com/gh/andela/wger-space/tree/ch-circle-ci-integrations-with-slack-166185758.svg?style=svg
-    :target: https://circleci.com/gh/andela/wger-space/tree/ch-circle-ci-integrations-with-slack-166185758
+.. image:: https://circleci.com/gh/andela/wger-space/tree/develop.svg?style=svg
+    :target: https://circleci.com/gh/andela/wger-space/tree/develop
 
 
 
