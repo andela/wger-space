@@ -105,6 +105,7 @@ BOWER_INSTALLED_APPS = (
 
 
 MIDDLEWARE_CLASSES = (
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -126,6 +127,7 @@ MIDDLEWARE_CLASSES = (
     # Django mobile
     'django_mobile.middleware.MobileDetectionMiddleware',
     'django_mobile.middleware.SetFlavourMiddleware',
+    
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -310,7 +312,7 @@ THUMBNAIL_ALIASES = {
 #
 # Django compressor
 #
-STATIC_ROOT = ''
+
 STATIC_URL = '/static/'
 
 # The default is not DEBUG, override if needed
@@ -319,7 +321,7 @@ COMPRESS_CSS_FILTERS = (
     'compressor.filters.css_default.CssAbsoluteFilter',
     'compressor.filters.cssmin.rCSSMinFilter'
 )
-COMPRESS_ROOT = STATIC_ROOT
+COMPRESS_ROOT = ''
 
 # BOWER binary
 if sys.platform.startswith('win32'):
@@ -370,3 +372,13 @@ WGER_SETTINGS = {
     'EMAIL_FROM': 'wger Workout Manager <wger@example.com>',
     'TWITTER': False
 }
+
+#
+#STATIC FILES
+#
+PROJECT_ROOT = os.path.join(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_ROOT, "static"),
+)

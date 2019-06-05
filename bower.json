@@ -1,0 +1,26 @@
+{
+  "name": "wger",
+  "description": "Self hosted FLOSS fitness/workout and weight tracker",
+  "main": "",
+  "license": "AGPL-3.0",
+  "homepage": "https://github.com/andela/wger-space",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "wger/core/static/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "datatables": "DataTables#^1.10.19",
+    "components-font-awesome": "^5.4.2",
+    "metrics-graphics": "^2.15.6",
+    "devbridge-autocomplete": "1.2.x",
+    "jquery": "2.1.x",
+    "Sortable": "sortablejs#1.4.x",
+    "shariff": "^3.2.1",
+    "tinymce": "tinymce-dist#^5.0.6"
+  }
+}
