@@ -110,6 +110,11 @@ router.register(
 )
 
 # Core app
+
+router.register(r"^user/creation", 
+        core_api_views.ApiCreateUser, 
+        base_name="apiregistration"
+)
 router.register(
     r"userprofile", core_api_views.UserProfileViewSet, base_name="userprofile"
 )

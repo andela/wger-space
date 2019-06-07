@@ -2,7 +2,6 @@
     :target: https://circleci.com/gh/andela/wger-space/tree/develop
 
 
-
 .. image:: https://coveralls.io/repos/github/andela/wger-space/badge.svg?branch=ch-circle-ci-integrations-with-slack-166185758
     :target: https://coveralls.io/github/andela/wger-space?branch=ch-circle-ci-integrations-with-slack-166185758
 
