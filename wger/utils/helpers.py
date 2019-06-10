@@ -30,6 +30,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import get_object_or_404
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.translation import ugettext as _
 
 logger = logging.getLogger(__name__)
 
@@ -124,6 +125,41 @@ def make_token(user):
     token = default_token_generator.make_token(user)
 
     return uid, token
+
+
+def get_exercise_as_json(exercise, image, thumbnail):
+    exercise_json = {
+        'value': exercise.name,
+        'data': {
+            'id': exercise.id,
+            'name': exercise.name,
+            'description': exercise.description,
+            'category': _(exercise.category.name),
+            'image': image,
+            'image_thumbnail': thumbnail,
+            'muscles': [
+                muscles.name for muscles in exercise
+                .muscles.all()],
+            'muscles_secondary': [
+                muscles.name for muscles in exercise
+                .muscles_secondary.all()],
+            'equipment': [
+                equipment.name for equipment in exercise
+                .equipment.all()],
+        }
+    }
+    return exercise_json
+
+
+def query_exercises(exercise_name, Exercise):
+    if exercise_name:
+        exercises = (
+            Exercise.objects.filter(name__icontains=exercise_name)
+            .filter(status=Exercise.STATUS_ACCEPTED)
+            .order_by("category__name", "name")
+            .distinct()
+        )
+    return exercises
 
 
 def check_token(uidb64, token):

@@ -422,6 +422,38 @@ class ExercisesTestCase(WorkoutManagerTestCase):
         result = json.loads(response.content.decode("utf8"))
         self.assertEqual(len(result["suggestions"]), 0)
 
+    def filter_exercise(self, fail=True):
+        """
+        Helper function to test getting all exercise info
+        """
+
+        # 1 hit, "Very cool exercise"
+        response = self.client.get(
+            reverse("exercise-info"), {"term": "cool"}
+        )
+        self.assertEqual(response.status_code, 200)
+        result = json.loads(response.content.decode("utf8"))
+        self.assertEqual(len(result), 1)
+        self.assertEqual(
+            result["info"][0]["value"], "Very cool exercise"
+        )
+        self.assertEqual(result["info"][0]["data"]["id"], 2)
+        self.assertEqual(
+            result["info"][0]["data"]["category"], "Another category"
+        )
+        self.assertEqual(result["info"][0]["data"]["image"], None)
+        self.assertEqual(
+            result["info"][0]["data"]["image_thumbnail"], None
+        )
+
+        # 0 hits, "Pending exercise"
+        response = self.client.get(
+            reverse("exercise-info"), {"term": "Pending"}
+        )
+        self.assertEqual(response.status_code, 200)
+        result = json.loads(response.content.decode("utf8"))
+        self.assertEqual(len(result["info"]), 0)
+
     def test_search_exercise_anonymous(self):
         """
         Test deleting an exercise by an anonymous user
@@ -436,6 +468,21 @@ class ExercisesTestCase(WorkoutManagerTestCase):
 
         self.user_login("test")
         self.search_exercise()
+
+    def test_filter_exercise_anonymous(self):
+        """
+        Test deleting an exercise by an anonymous user
+        """
+
+        self.filter_exercise()
+
+    def test_filter_exercise_logged_in(self):
+        """
+        Test deleting an exercise by a logged in user
+        """
+
+        self.user_login("test")
+        self.filter_exercise()
 
 
 class DeleteExercisesTestCase(WorkoutManagerDeleteTestCase):

@@ -255,6 +255,9 @@ urlpatterns += [
         exercises_api_views.search,
         name="exercise-search",
     ),
+    url(r'^api/v2/exercise/info/$',
+        exercises_api_views.ExerciseInfo.as_view(),
+        name='exercise-info'),
     url(
         r"^api/v2/ingredient/search/$",
         nutrition_api_views.search,
