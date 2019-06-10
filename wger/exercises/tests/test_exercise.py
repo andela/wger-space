@@ -254,6 +254,12 @@ class ExercisesTestCase(WorkoutManagerTestCase):
         # Exercise was not added
         self.assertEqual(count_before, count_after)
 
+    def test_exercise_languages(self):
+        response = self.client.get(
+            reverse("exercise:exercise:overview"), {
+                "lang": "de"})
+        self.assertEqual(response.status_code, 200)
+
     def test_add_exercise_temp_user(self):
         """
         Tests adding an exercise with a logged in demo user

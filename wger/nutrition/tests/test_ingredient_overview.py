@@ -116,6 +116,12 @@ class OverviewPlanTestCase(WorkoutManagerTestCase):
         if logged_in and demo:
             self.assertContains(response, "Only registered users can do this")
 
+    def test_ingredient_languages(self):
+        response = self.client.get(
+            reverse("nutrition:ingredient:list"), {
+                "language_form": "de"})
+        self.assertEqual(response.status_code, 200)
+
     def test_ingredient_index_editor(self):
         """
         Tests the ingredient overview page as a logged in user with editor
