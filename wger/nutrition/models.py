@@ -116,55 +116,61 @@ class NutritionPlan(models.Model):
         """
         Sums the nutritional info of all items in the plan
         """
-        use_metric = self.user.userprofile.use_metric
-        unit = "kg" if use_metric else "lb"
-        result = {
-            "total": {
-                "energy": 0,
-                "protein": 0,
-                "carbohydrates": 0,
-                "carbohydrates_sugar": 0,
-                "fat": 0,
-                "fat_saturated": 0,
-                "fibres": 0,
-                "sodium": 0,
-            },
-            "percent": {"protein": 0, "carbohydrates": 0, "fat": 0},
-            "per_kg": {"protein": 0, "carbohydrates": 0, "fat": 0},
-        }
+        cached_plan = cache.get(cache_mapper.get_nutrition_data(self.pk))
+        if not cached_plan:
+            use_metric = self.user.userprofile.use_metric
+            unit = "kg" if use_metric else "lb"
+            result = {
+                "total": {
+                    "energy": 0,
+                    "protein": 0,
+                    "carbohydrates": 0,
+                    "carbohydrates_sugar": 0,
+                    "fat": 0,
+                    "fat_saturated": 0,
+                    "fibres": 0,
+                    "sodium": 0,
+                },
+                "percent": {"protein": 0, "carbohydrates": 0, "fat": 0},
+                "per_kg": {"protein": 0, "carbohydrates": 0, "fat": 0},
+            }
 
-        # Energy
-        for meal in self.meal_set.select_related():
-            values = meal.get_nutritional_values(use_metric=use_metric)
-            for key in result["total"].keys():
-                result["total"][key] += values[key]
+            # Energy
+            for meal in self.meal_set.select_related():
+                values = meal.get_nutritional_values(use_metric=use_metric)
+                for key in result["total"].keys():
+                    result["total"][key] += values[key]
 
-        energy = result["total"]["energy"]
+            energy = result["total"]["energy"]
 
-        # In percent
-        if energy:
-            for key in result["percent"].keys():
-                result["percent"][key] = (
-                    result["total"][key]
-                    * ENERGY_FACTOR[key][unit]
-                    / energy
-                    * 100
-                )
+            # In percent
+            if energy:
+                for key in result["percent"].keys():
+                    result["percent"][key] = (
+                        result["total"][key]
+                        * ENERGY_FACTOR[key][unit]
+                        / energy
+                        * 100
+                    )
 
-        # Per body weight
-        weight_entry = self.get_closest_weight_entry()
-        if weight_entry:
-            for key in result["per_kg"].keys():
-                result["per_kg"][key] = (
-                    result["total"][key] / weight_entry.weight
-                )
+            # Per body weight
+            weight_entry = self.get_closest_weight_entry()
+            if weight_entry:
+                for key in result["per_kg"].keys():
+                    result["per_kg"][key] = (
+                        result["total"][key] / weight_entry.weight
+                    )
 
-        # Only 2 decimal places, anything else doesn't make sense
-        for key in result.keys():
-            for i in result[key]:
-                result[key][i] = Decimal(result[key][i]).quantize(TWOPLACES)
+            # Only 2 decimal places, anything else doesn't make sense
+            for key in result.keys():
+                for i in result[key]:
+                    result[key][i] = Decimal(
+                        result[key][i]).quantize(TWOPLACES)
 
-        return result
+            cache.set(cache_mapper.get_nutrition_data(self.pk), result)
+            return result
+
+        return cached_plan
 
     def get_closest_weight_entry(self):
         """
