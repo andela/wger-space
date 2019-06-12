@@ -1,0 +1,49 @@
+{% load i18n staticfiles wger_extras %}
+
+    <div class="row text-center slides-container">
+        <div class="col-md-4">
+            <div class="timeline-image">
+                <img class="img-circle img-responsive" src="{% static 'images/gym-management.png' %}" alt="">
+            </div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4>{% trans 'Gym management' %}</h4>
+                </div>
+                <div class="timeline-body">
+                    <p class="text-light">
+                        {% blocktrans trimmed %}
+                            Use the application for your gym to manage its members, their
+                            workouts and attendance. You can manage the members' contracts,
+                            keep notes and upload any files you might need.
+                        {% endblocktrans %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="timeline-image" style="margin-top: 150px;"> 
+                <h4>{% blocktrans trimmed %}100% Free
+                    <br>and
+                    <br>Open Source{% endblocktrans %}
+                </h4>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="timeline-image">
+                <img class="img-circle img-responsive" src="{% static 'images/rest-api.png' %}" alt="">
+            </div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4>{% trans "REST API" %}</h4>
+                </div>
+                <div class="timeline-body">
+                    <p class="text-light">
+                        {% blocktrans trimmed %}
+                            wger provides a REST API with full read and write access to all
+                            data so you can integrate your own application and tools.
+                        {% endblocktrans %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -27,7 +27,7 @@
 body {
   overflow-x: hidden;
   /*font-family: "Roboto Slab", "Helvetica Neue", Helvetica, Arial, sans-serif;*/
-  font-family: font-family: "Open Sans Light", Arial, Helvetica, sans-serif;
+  font-family: font-family "Open Sans Light", Arial, Helvetica, sans-serif;
 }
 .text-muted {
   color: #777777;
@@ -71,6 +71,25 @@ h6 {
   font-family: "Open Sans Bold", Arial, Helvetica, sans-serif;
   text-transform: uppercase;
   font-weight: 700;
+}
+.img-circle {
+  width: 170px;
+  margin-left: 90px;
+}
+.carousel-indicators {
+  bottom: -10%;
+}
+.carousel-indicators .active{
+  width: 100px;
+}
+.carousel-indicators li {
+  width: 100px;
+}
+.slides-container {
+  opacity: 0.9;
+  width: 100%;
+  padding-top: 10px;
+  margin: 0px;
 }
 .img-centered {
   margin: 0 auto;
@@ -128,14 +147,14 @@ fieldset[disabled] .btn-primary.active {
 }
 .btn-xl {
   color: white;
-  background-color: #204a87;
   border-color: #204a87;
   font-family: "Open Sans Bold", Arial, Helvetica, sans-serif;
   text-transform: uppercase;
   font-weight: 700;
   border-radius: 3px;
-  font-size: 18px;
-  padding: 20px 40px;
+  margin-right: 10px;
+  float: right;
+  margin-top: 10px;
 }
 .btn-xl:hover,
 .btn-xl:focus,
@@ -265,7 +284,7 @@ header {
   color: white;
 }
 header .intro-text {
-  padding-top: 100px;
+  padding-top: 50px;
   padding-bottom: 50px;
 }
 header .intro-text .intro-lead-in {
@@ -280,13 +299,11 @@ header .intro-text .intro-heading {
   text-transform: uppercase;
   font-weight: 700;
   font-size: 50px;
-  line-height: 50px;
-  margin-bottom: 25px;
 }
 @media (min-width: 768px) {
   header .intro-text {
     padding-top: 300px;
-    padding-bottom: 200px;
+    padding-bottom: 100px;
   }
   header .intro-text .intro-lead-in {
     font-family: "Open Sans Light", Arial, Helvetica, sans-serif;
@@ -300,8 +317,6 @@ header .intro-text .intro-heading {
     text-transform: uppercase;
     font-weight: 700;
     font-size: 75px;
-    line-height: 75px;
-    margin-bottom: 50px;
   }
 }
 section {

@@ -1,0 +1,50 @@
+{% load i18n staticfiles wger_extras %}
+
+    <div class="row text-center slides-container">
+        <div class="col-md-4">
+            <span class="fa-stack fa-4x">
+                <i class="fa fa-circle-thin fa-stack-2x text-primary"></i>
+                <i class="fa fa fa-user fa-stack-1x fa-inverse"></i>
+            </span>
+            <h4 class="service-heading text-light">{% trans "Workouts" %}</h4>
+            <p class="text-light">
+                {% blocktrans trimmed %}
+                    You can create and manage flexible workout routines for any goals you
+                    have. Select exactly which exercises you'll do and how many repetitions,
+                    time or distance you want to do them. You can also combine different
+                    workouts into a schedule.
+                {% endblocktrans %}
+            </p>
+        </div>
+        <div class="col-md-4">
+            <span class="fa-stack fa-4x">
+                <i class="fa fa-circle-thin fa-stack-2x text-primary"></i>
+                <i class="fa fa-cutlery fa-stack-1x fa-inverse"></i>
+            </span>
+            <h4 class="service-heading text-light">{% trans "Nutrition" %}</h4>
+            <p class="text-light">
+                {% blocktrans trimmed %}
+                    Create your personal diet plan by creating as many meals with as many
+                    different ingredients as you need. The application will calculate the
+                    nutritional values (total energy, protein, carbohydrates, and so on)
+                    about the whole plan as well as <br>
+                    the indivual meals.
+                {% endblocktrans %}
+            </p>
+        </div>
+        <div class="col-md-4">
+            <span class="fa-stack fa-4x">
+                <i class="fa fa-circle-thin fa-stack-2x text-primary"></i>
+                <i class="fa fa-line-chart fa-stack-1x fa-inverse"></i>
+            </span>
+            <h4 class="service-heading text-light">{% trans 'Diary' %}</h4>
+            <p class="text-light">
+                {% blocktrans trimmed %}
+                    Enter the weights and repetitions you did for each exercise to generate
+                    diagrams that let you see at a glance how well you are doing. The raw
+                    numbers are of course still accessible.
+                {% endblocktrans %}
+                {% trans "You can also enter notes and a general impression (great, neutral, etc.)" %}
+            </p>
+        </div>
+    </div>

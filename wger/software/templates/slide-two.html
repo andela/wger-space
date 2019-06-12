@@ -1,0 +1,61 @@
+{% load i18n staticfiles wger_extras %}
+
+    <div class="row text-center slides-container">
+        <div class="col-md-4">
+            <div class="timeline-image">
+                <img class="img-circle img-responsive" src="{% static 'images/weight-chart.png' %}" alt="">
+            </div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4>{% trans "Weight tracker" %}</h4>
+                </div>
+                <div class="timeline-body">
+                    <p class="text-light">
+                        {% blocktrans trimmed %}
+                            Keep track of your progress with the body weight chart. This makes
+                            it easy to see if you are reaching your goals or need to adjust
+                            something.
+                        {% endblocktrans %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="timeline-image">
+                <img class="img-circle img-responsive" src="{% static 'images/muscle-overview.png' %}" alt="">
+            </div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4>{% trans 'Exercise database' %}</h4>
+                </div>
+                <div class="timeline-body">
+                    <p class="text-light">
+                        {% blocktrans trimmed %}
+                            The exercise database contains more than hundred exercises from
+                            which you can choose when creating a workout. You can view them by
+                            category and equipment used or muscles trained.
+                        {% endblocktrans %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="timeline-image">
+                <img class="img-circle img-responsive" src="{% static 'images/calendar.png' %}" alt="">
+            </div>
+            <div class="timeline-panel">
+                <div class="timeline-heading">
+                    <h4>{% trans 'Calendar' %}</h4>
+                </div>
+                <div class="timeline-body">
+                    <p class="text-light">
+                        {% blocktrans trimmed %}
+                            Get an overview of how and when you trained as well as how you
+                            personally felt you performed. Access all your individual diary
+                            entries with one click.
+                        {% endblocktrans %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
