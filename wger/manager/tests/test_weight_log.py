@@ -273,6 +273,7 @@ class WeightlogTestCase(WorkoutManagerTestCase):
         session1.notes = "Something here"
         session1.impression = "3"
         session1.date = datetime.date(2014, 1, 5)
+        session1.workoutlog = l
         session1.save()
 
         session2 = WorkoutSession()

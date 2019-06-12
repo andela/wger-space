@@ -802,7 +802,8 @@ class WorkoutLog(models.Model):
             date = self.date
 
         try:
-            return WorkoutSession.objects.filter(user=self.user).get(date=date)
+            return WorkoutSession.objects.filter(
+                user=self.user).get(workoutlog=self)
         except WorkoutSession.DoesNotExist:
             return None
 
@@ -858,6 +859,14 @@ class WorkoutSession(models.Model):
     """
     The workout the session belongs to
     """
+
+    workoutlog = models.ForeignKey(
+        WorkoutLog, verbose_name=_("workoutlog"),
+        null=True,
+        blank=True,
+        help_text=_(
+            "this shows what log belongs to which session or otherwise")
+    )
 
     date = Html5DateField(verbose_name=_("Date"))
     """
