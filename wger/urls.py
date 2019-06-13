@@ -264,6 +264,7 @@ urlpatterns += [
         name="ingredient-search",
     ),
     url(r"^api/v2/", include(router.urls)),
+    url(r"api/v2/meal-mealitem", nutrition_api_views.MealMealItemView.as_view())
 ]
 
 #

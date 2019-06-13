@@ -22,9 +22,14 @@ from wger.core.tests.base_testcase import (
     WorkoutManagerTestCase,
     WorkoutManagerEditTestCase,
     WorkoutManagerAddTestCase,
+    get_reverse
 )
-from wger.nutrition.models import Meal
+from wger.nutrition.models import Meal, MealItem
 from wger.nutrition.models import NutritionPlan
+
+from django.test import TestCase
+from rest_framework import status
+from rest_framework.test import APIClient
 
 
 class MealRepresentationTestCase(WorkoutManagerTestCase):
@@ -48,18 +53,6 @@ class EditMealTestCase(WorkoutManagerEditTestCase):
     url = "nutrition:meal:edit"
     pk = 5
     data = {"time": datetime.time(8, 12)}
-
-
-class AddMealTestCase(WorkoutManagerAddTestCase):
-    """
-    Tests adding a Meal
-    """
-
-    object_class = Meal
-    url = reverse("nutrition:meal:add", kwargs={"plan_pk": 4})
-    data = {"time": datetime.time(9, 2)}
-    user_success = "test"
-    user_fail = "admin"
 
 
 class PlanOverviewTestCase(WorkoutManagerTestCase):
