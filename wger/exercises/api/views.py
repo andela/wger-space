@@ -19,6 +19,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route, api_view
+from rest_framework.views import APIView
 
 from easy_thumbnails.alias import aliases
 from easy_thumbnails.files import get_thumbnailer
@@ -44,6 +45,7 @@ from wger.exercises.models import (
 )
 from wger.utils.language import load_item_languages, load_language
 from wger.utils.permissions import CreateOnlyPermission
+from wger.utils.helpers import get_exercise_as_json, query_exercises
 
 
 class ExerciseViewSet(viewsets.ModelViewSet):
@@ -128,6 +130,39 @@ def search(request):
         json_response["suggestions"] = results
 
     return Response(json_response)
+
+
+class ExerciseInfo(APIView):
+
+    def get(self, request):
+        """Returns all the information about an exercise."""
+        """
+        It uses the same functionality as search.
+        It takes the exercise name as the parameter
+        and returns all the information about that exercise
+        """
+        exercise_name = request.GET.get('term', None)
+        results = []
+        json_response = {}
+
+        exercises = query_exercises(exercise_name, Exercise)
+        for exercise in exercises:
+            if exercise.main_image:  # pragma: no cover
+                image_obj = exercise.main_image
+                image = image_obj.image.url
+                thumbnail_obj = get_thumbnailer(image_obj.image)
+                thumbnail = thumbnail_obj.get_thumbnail(
+                    aliases.get("micro_cropped")).url
+            else:
+                image = None
+                thumbnail = None
+
+            exercise_json = get_exercise_as_json(
+                exercise, image, thumbnail)
+            results.append(exercise_json)
+        json_response['info'] = results
+
+        return Response(json_response)
 
 
 class EquipmentViewSet(viewsets.ReadOnlyModelViewSet):
