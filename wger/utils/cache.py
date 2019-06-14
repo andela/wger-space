@@ -67,6 +67,7 @@ class CacheKeyMapper(object):
     INGREDIENT_CACHE_KEY = "ingredient-{0}"
     WORKOUT_CANONICAL_REPRESENTATION = "workout-canonical-representation-{0}"
     WORKOUT_LOG_LIST = "workout-log-hash-{0}"
+    NUTRITIONAL_DATA_REPRESENTATION = "nutritional_data_representation-{0}"
 
     def get_pk(self, param):
         """
@@ -114,6 +115,12 @@ class CacheKeyMapper(object):
         Return the workout canonical representation
         """
         return self.WORKOUT_LOG_LIST.format(hash_value)
+
+    def get_nutrition_data(self, param):
+        """
+        Return the nutritional data representation
+        """
+        return self.NUTRITIONAL_DATA_REPRESENTATION.format(self.get_pk(param))
 
 
 cache_mapper = CacheKeyMapper()
