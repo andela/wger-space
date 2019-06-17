@@ -14,9 +14,13 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 
+import os
 import logging
 import csv
 import datetime
+import fitbit
+import requests
+import base64
 
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -24,13 +28,16 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.utils import formats
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 from django.db.models import Min
 from django.db.models import Max
+from django.db import IntegrityError
 from django.views.generic import CreateView
 from django.views.generic import UpdateView
+from django.views.generic import View
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -237,3 +244,107 @@ class WeightCsvImportFormPreview(FormPreview):
                 "weight:overview", kwargs={"username": request.user.username}
             )
         )
+
+
+class FitbitComplete(View):
+
+    def get(self, request):
+        response = self.fitbitLogin()
+        if "code" in request.GET:
+            code = request.GET["code"]
+            self.authenticated_fitbit, self.userid = \
+                self.createAuthClient(code)
+
+            weight_data = FitbitWeightData()
+            kwargs = {
+                "authenticated_fitbit": self.authenticated_fitbit,
+                "user_id": self.userid
+            }
+
+            return HttpResponseRedirect(
+                weight_data.getWeight(request, **kwargs))
+
+        return HttpResponseRedirect(response.url)
+
+    def fitbitLogin(self):
+        self.CLIENT_ID = os.environ.get('CLIENT_ID')
+        self.CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
+        self.redirect_uri = os.environ.get('FITBIT_REDIRECT_URI')
+
+        self.unauthenticated_fitbit = fitbit.Fitbit(
+            client_id=self.CLIENT_ID,
+            client_secret=self.CLIENT_SECRET,
+            redirect_uri=self.redirect_uri
+        )
+        response = requests.get(
+            self.unauthenticated_fitbit.client.authorization_url,
+            params={
+                "response_type": "code",
+                "client_id": self.CLIENT_ID,
+                "client_secret": self.CLIENT_SECRET,
+                "scope": "weight"
+            })
+        return response
+
+    def createAuthClient(self, code):
+        response = requests.post(
+            self.unauthenticated_fitbit.client.access_token_url,
+            params={
+                "grant_type": "authorization_code",
+                "redirect_uri": self.redirect_uri,
+                "code": code
+            },
+            headers={
+                "Content-Type": 'application/x-www-form-urlencoded',
+                "Authorization": "Basic " + base64.b64encode(
+                    self.CLIENT_ID.encode()
+                    + b':'
+                    + self.CLIENT_SECRET.encode()).decode()
+            }
+        ).json()
+
+        userid = response["user_id"]
+
+        authenticated_fitbit = fitbit.Fitbit(
+            client_id=self.CLIENT_ID,
+            client_secret=self.CLIENT_SECRET,
+            access_token=response["access_token"],
+            refresh_token=response["refresh_token"],
+            expires_in=response["expires_in"]
+        )
+        return authenticated_fitbit, userid
+
+
+class FitbitWeightData:
+
+    def getWeight(self, request, *args, **kwargs):
+
+        authenticated_fitbit = kwargs["authenticated_fitbit"]
+        userid = kwargs["user_id"]
+        time_period = os.environ.get('TIME_PERIOD', '1m')
+
+        fitbit_user_weight = authenticated_fitbit.get_bodyweight(
+            user_id=userid,
+            period=time_period
+        )
+
+        try:
+            for weight in fitbit_user_weight['weight']:
+                weight_entry = WeightEntry()
+                # convert the weight to kilograms. It is returned from
+                #  Fitbit in pounds
+                weight_entry.weight = round(
+                    (weight['weight'] * 0.453592)
+                )
+                weight_entry.user = request.user
+                weight_entry.date = weight['date']
+                weight_entry.save()
+            messages.success(request, _(
+                "Successfully retrieved weight data from Fitbit."))
+        except IntegrityError:
+            messages.info(request, _('Weight already retrieved'))
+        return reverse(
+            "weight:overview",
+            kwargs={
+                "username": request.user.username
+            })

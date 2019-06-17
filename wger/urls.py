@@ -23,6 +23,7 @@ from django.conf.urls import include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
+from django.contrib.auth.decorators import login_required
 
 from wger.nutrition.sitemap import NutritionSitemap
 from wger.exercises.sitemap import ExercisesSitemap
@@ -41,6 +42,7 @@ from wger.core.api import views as core_api_views
 from wger.exercises.api import views as exercises_api_views
 from wger.nutrition.api import views as nutrition_api_views
 from wger.weight.api import views as weight_api_views
+from wger.weight.views import FitbitComplete
 
 #
 # REST API
@@ -247,6 +249,11 @@ urlpatterns += [
     url(
         r"^amazon-manifest\.webapp$",
         WebappManifestView.as_view(template_name="amazon-manifest.webapp"),
+    ),
+    url(
+        r"^fitbit-complete/$", 
+        login_required(FitbitComplete.as_view()),
+        name='fitbit-complete'
     ),
     # API
     url(r"^api/", include(v1_api.urls)),
