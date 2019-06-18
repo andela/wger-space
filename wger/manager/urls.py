@@ -157,6 +157,7 @@ patterns_day = [
 # sub patterns for workout sets
 patterns_set = [
     url(r"^day/(?P<day_pk>\d+)/set/add/$", set.create, name="add"),
+    url(r"^day/(?P<day_pk>\d+)/set/drop_set/$", set.create_dropset, name="drop_set"),
     url(
         r"^get-formset/(?P<exercise_pk>\d+)/(?P<reps>\d+)/",
         set.get_formset,

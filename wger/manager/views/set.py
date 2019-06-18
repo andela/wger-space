@@ -26,7 +26,10 @@ from django.contrib.auth.decorators import login_required
 
 from wger.manager.models import Day, Set, Setting
 from wger.exercises.models import Exercise
-from wger.manager.forms import SetForm, SetFormMobile, SettingForm
+from wger.manager.forms import (SetForm,
+                                SetFormMobile,
+                                SettingForm,
+                                DropsetForm)
 from wger.utils.language import load_item_languages
 from wger.config.models import LanguageConfig
 
@@ -136,6 +139,88 @@ def create(request, day_pk):
         "base_empty.html" if request.is_ajax() else "base.html"
     )
     return render(request, "set/add.html", context)
+
+
+@login_required
+def create_dropset(request, day_pk):
+    """
+    Creates a new set. This view handles both the set form and the
+    corresponding
+    settings formsets
+    """
+    day = get_object_or_404(Day, pk=day_pk)
+    print(request.user)
+    if day.get_owner_object().user != request.user:
+        return HttpResponseForbidden()
+
+    # Select the correct form depending on the flavour of the request.
+    # The difference is that the mobile form doesn't use the autocompleter for
+    # exercises, but 2 dropdowns, one to filter by category and one to select
+    # the exercises themselves.
+
+    form_class = DropsetForm
+
+    context = {}
+    formsets = []
+    form = form_class(initial={"sets": Set.DEFAULT_SETS})
+
+    # If the form and all formsets validate, save them
+    if request.method == "POST":
+        form = form_class(request.POST)
+        if form.is_valid():
+            for exercise in form.cleaned_data["exercises"]:
+                formset = SettingFormset(
+                    request.POST,
+                    queryset=Setting.objects.none(),
+                    prefix="exercise{0}".format(exercise.id),
+                )
+                formsets.append({"exercise": exercise, "formset": formset})
+        all_valid = True
+
+        for formset in formsets:
+            if not formset["formset"].is_valid():
+                all_valid = False
+
+        if form.is_valid() and all_valid:
+            # Manually take care of the order, TODO: better move this to
+            #  the model
+            max_order = day.set_set.select_related().aggregate(
+                models.Max("order")
+            )
+            form.instance.order = (max_order["order__max"] or 0) + 1
+            form.instance.exerciseday = day
+            set_obj = form.save()
+
+            for formset in formsets:
+                instances = formset["formset"].save(commit=False)
+                for instance in instances:
+                    instance.set = set_obj
+                    instance.order = 1
+                    instance.exercise = formset["exercise"]
+                    instance.save()
+
+            return HttpResponseRedirect(
+                reverse(
+                    "manager:workout:view",
+                    kwargs={"pk": day.get_owner_object().id},
+                )
+            )
+        else:
+            logger.debug(form.errors)
+
+    # Other context we need
+    else:  # pragma: no cover
+        context["form"] = form
+        context["day"] = day
+        context["max_sets"] = Set.MAX_SETS
+        context["formsets"] = formsets
+        context["form_action"] = reverse(
+            "manager:set:drop_set", kwargs={"day_pk": day_pk}
+        )
+        context["extend_template"] = (
+            "base_empty.html" if request.is_ajax() else "base.html"
+        )
+        return render(request, "set/drop_set.html", context)
 
 
 @login_required
