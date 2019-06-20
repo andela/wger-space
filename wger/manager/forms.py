@@ -98,6 +98,20 @@ class SetForm(ModelForm):
         )
 
 
+class DropsetForm(ModelForm):
+    class Meta:
+        model = Set
+        exclude = ("order", "exerciseday")
+        widgets = {"exercises": ExerciseAjaxSelect()}
+
+    def __init__(self, *args, **kwargs):
+        super(DropsetForm, self).__init__(*args, **kwargs)
+        self.fields["exercises"].help_text = _(
+            "You can search for more than one exercise, "
+            "they will be grouped together for a superset."
+        )
+
+
 class SetFormMobile(ModelForm):
     """
     Don't use the auto completer when accessing the mobile version
