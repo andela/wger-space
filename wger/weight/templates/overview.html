@@ -110,6 +110,13 @@
                 {% trans "Import from spreadsheet" %}
             </a>
         </li>
+        <li>
+            {% comment %} <a href="{% url 'sync-fitbit-weight' %}" {% auto_link_css flavour %}> {% endcomment %}
+            <a href="{% url 'fitbit-complete' %}" {% auto_link_css flavour %}>
+                <span class="{% fa_class 'upload' %}"></span>
+                {% trans "Import from Fitbit" %}
+            </a>
+        </li>
     </ul>
 </div>
 <a href="{% url 'weight:add' %}" class="btn btn-success btn-sm wger-modal-dialog">

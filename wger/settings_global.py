@@ -90,6 +90,9 @@ INSTALLED_APPS = (
     #social django
     # Django social login
     'social_django',
+
+
+    
 )
 
 # added list of external libraries to be installed by bower
@@ -219,7 +222,6 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_SECRET')
 
 SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('FACEBOOK_KEY')
 SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('FACEBOOK_SECRET')
-
 
 #
 # Internationalization
