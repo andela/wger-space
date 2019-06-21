@@ -19,6 +19,9 @@ from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
 from wger.nutrition.api.serializers import (
     NutritionPlanSerializer,
@@ -27,6 +30,7 @@ from wger.nutrition.api.serializers import (
     MealItemSerializer,
     MealSerializer,
     IngredientSerializer,
+    MealMealItemSerializer
 )
 from wger.nutrition.forms import UnitChooserForm
 from wger.nutrition.models import (
@@ -275,3 +279,14 @@ class MealItemViewSet(WgerOwnerObjectModelViewSet):
         Return an overview of the nutritional plan's values
         """
         return Response(MealItem.objects.get(pk=pk).get_nutritional_values())
+
+
+class MealMealItemView(APIView):
+
+    serializer_class = MealMealItemSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

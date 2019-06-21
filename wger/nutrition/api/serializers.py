@@ -23,6 +23,7 @@ from wger.nutrition.models import (
     MealItem,
     Meal,
     Ingredient,
+    NutritionPlan,
 )
 
 
@@ -87,3 +88,36 @@ class IngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ingredient
+
+
+class MealMealItemSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MealItem
+
+    def validate(self, data):
+        plan_id = self.initial_data.get('plan_id')
+        time = self.initial_data.get('time')
+        order = 1
+
+        plan = NutritionPlan.objects.get(id=plan_id)
+
+        meal = Meal(
+            order=order,
+            plan=plan,
+            time=time
+        )
+        meal.save()
+
+        data.update(
+            {
+                "meal": meal,
+                "order": order
+            }
+        )
+        return data
+
+    def create(self, validated_data):
+        meal_item = MealItem(**validated_data)
+        meal_item.save()
+        return validated_data

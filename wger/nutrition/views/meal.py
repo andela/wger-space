@@ -14,6 +14,9 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 import logging
+import json
+import requests
+import os
 
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponseForbidden
@@ -23,8 +26,10 @@ from django.utils.translation import ugettext_lazy
 
 from django.views.generic import CreateView, UpdateView
 
-from wger.nutrition.models import NutritionPlan, Meal
+from wger.nutrition.models import NutritionPlan, Meal, MealItem
 from wger.utils.generic_views import WgerFormMixin
+from wger.nutrition.forms import MealItemForm
+
 
 logger = logging.getLogger(__name__)
 
@@ -39,18 +44,40 @@ class MealCreateView(WgerFormMixin, CreateView):
     Generic view to add a new meal to a nutrition plan
     """
 
-    model = Meal
-    fields = "__all__"
+    model = MealItem
     title = ugettext_lazy("Add new meal")
     owner_object = {"pk": "plan_pk", "class": NutritionPlan}
+    form_class = MealItemForm
+    template_name = "meal_item/add.html"
 
     def form_valid(self, form):
-        plan = get_object_or_404(
-            NutritionPlan, pk=self.kwargs["plan_pk"], user=self.request.user
+        time = self.request.POST["time-field"]
+        if time == '':
+            time = None
+        amount = self.request.POST['amount']
+        ingredient = self.request.POST['ingredient']
+        weight_unit = self.request.POST['weight_unit']
+        plan_id = self.kwargs['plan_pk']
+
+        url = os.environ.get("MEAL_MEALITEM_URL")
+        payload = {
+            "time": time,
+            "amount": amount,
+            "ingredient": ingredient,
+            "weight_unit": weight_unit,
+            "plan_id": plan_id
+        }
+        headers = {"content-type": "application/json"}
+        requests.post(
+            url,
+            data=json.dumps(payload),
+            headers=headers
         )
-        form.instance.plan = plan
-        form.instance.order = 1
-        return super(MealCreateView, self).form_valid(form)
+
+        return HttpResponseRedirect(
+            reverse("nutrition:plan:view",
+                    kwargs={"id": plan_id})
+        )
 
     def get_success_url(self):
         return self.object.plan.get_absolute_url()
@@ -60,6 +87,10 @@ class MealCreateView(WgerFormMixin, CreateView):
         context = super(MealCreateView, self).get_context_data(**kwargs)
         context["form_action"] = reverse(
             "nutrition:meal:add", kwargs={"plan_pk": self.kwargs["plan_pk"]}
+        )
+        context["plan_id"] = self.kwargs["plan_pk"]
+        context["ingredient_searchfield"] = self.request.POST.get(
+            "ingredient_searchfield", ""
         )
 
         return context
