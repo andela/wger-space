@@ -46,6 +46,8 @@ from wger.utils.widgets import (
 )
 from wger.config.models import LanguageConfig
 from wger.weight.helpers import process_log_entries
+from wger.core.models import Language
+from django.utils import translation
 
 
 logger = logging.getLogger(__name__)
@@ -60,10 +62,36 @@ class ExerciseListView(ListView):
     template_name = "exercise/overview.html"
     context_object_name = "exercises"
 
-    def get_queryset(self):
+    def get(self, request, *args, **kwargs):
+        request_language = request.GET.get('lang')
+        self.object_list = self.get_queryset()
+        context = self.get_context_data()
+
+        if not request_language:
+            context['exercises'] = self.object_list
+            used_language = translation.get_language().split('-')[0]
+            context['shown_language'] = used_language
+        else:
+            chosen_exercises = self.get_queryset(request_language)
+            context['shown_language'] = request_language
+            if not chosen_exercises:
+                context['exercises'] = self.object_list
+            else:
+                context['exercises'] = chosen_exercises
+        return self.render_to_response(context)
+
+    def get_queryset(self, language=None):
         """
         Filter to only active exercises in the configured languages
         """
+        if language:
+            language_object = Language.objects.get(short_name=language)
+            return (
+                Exercise.objects.accepted()
+                .filter(language=language_object.id)
+                .order_by('category__id')
+                .select_related()
+            )
         languages = load_item_languages(LanguageConfig.SHOW_ITEM_EXERCISES)
         return (
             Exercise.objects.accepted()
@@ -77,6 +105,8 @@ class ExerciseListView(ListView):
         Pass additional data to the template
         """
         context = super(ExerciseListView, self).get_context_data(**kwargs)
+        language_list = Language.objects.all()
+        context['language_list'] = language_list
         context["show_shariff"] = True
         return context
 

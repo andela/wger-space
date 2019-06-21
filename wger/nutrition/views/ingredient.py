@@ -37,6 +37,10 @@ from wger.utils.language import load_language, load_ingredient_languages
 from wger.utils.cache import cache_mapper
 
 
+from wger.core.models import Language
+from django.utils import translation
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -60,6 +64,17 @@ class IngredientListView(ListView):
         (the user can also want to see ingredients in English, in addition
         to his native language, see load_ingredient_languages)
         """
+        language = self.request.GET.get('language_form')
+        if language:
+            language_object = Language.objects.get(short_name=language)
+            selected_ingredients = (Ingredient.objects
+                                    .filter(status__in=Ingredient
+                                            .INGREDIENT_STATUS_OK)
+                                    .filter(language=language_object.id)
+                                    .only('id', 'name'))
+
+            if selected_ingredients:
+                return selected_ingredients
         languages = load_ingredient_languages(self.request)
         return (
             Ingredient.objects.filter(language__in=languages)
@@ -72,6 +87,14 @@ class IngredientListView(ListView):
         Pass additional data to the template
         """
         context = super(IngredientListView, self).get_context_data(**kwargs)
+        all_languages = Language.objects.all()
+        language = self.request.GET.get('language_form')
+        if language:
+            context['shown_language'] = language
+        else:
+            translation_language = translation.get_language().split('-')[0]
+            context['shown_language'] = translation_language
+        context['all_languages'] = all_languages
         context["show_shariff"] = True
         return context
 

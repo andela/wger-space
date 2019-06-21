@@ -23,6 +23,11 @@
                 }
             });
         });
+        $(function() {
+                $('#select_language').change(function() {
+                    this.form.submit();
+                });
+            });
     </script>
 {% endblock %}
 
@@ -69,6 +74,15 @@
                class="ajax-form-element form-control"
                placeholder="{% trans 'ingredient name' %}"
                style="width:100%;">
+    </form>
+    <br />
+    <h4>{% trans "choose language" %}</h4>
+    <form action="{% url 'nutrition:ingredient:list' %}" method="get">
+        <select name="language_form" id="select_language" class="form-control">
+          {% for language in all_languages %}
+          <option {% if language.short_name == shown_language %}selected {% endif %} value="{{ language.short_name }}">{% trans language.full_name %}</option>
+          {% endfor %}
+        </select> 
     </form>
 {% endblock %}
 
