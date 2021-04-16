@@ -6,7 +6,7 @@
 # Development packages
 flake8==3.7.7
 pep8
-django-debug-toolbar==1.9  #changed this line
+django-debug-toolbar==1.11.1  #changed this line
 coverage
 django-tabulate==0.1.1
 tabulate==0.8.3
